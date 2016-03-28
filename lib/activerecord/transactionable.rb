@@ -2,7 +2,7 @@ require "activerecord/transactionable/version"
 require "active_model"
 require "active_record"
 
-module Activerecord
+module Activerecord # Note lowercase "r" in Activerecord (different namespace than rails' module)
   # SRP: Provides an example of correct behavior for wrapping transactions.
   # NOTE: Rails' transactions are per-database connection, not per-model, nor per-instance,
   #       see: http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html

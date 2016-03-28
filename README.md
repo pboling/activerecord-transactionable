@@ -25,14 +25,36 @@ Or install it yourself as:
 
 ## Usage
 
+```
+class Car < ActiveRecord::Base
+  include Activerecord::Transactionable # Note lowercase "r" in Activerecord (different namespace than rails' module)
+
+  validates_presence_of :name
+end
+```
+
 When creating, saving, deleting within the transaction make sure to use the bang methods (`!`) in order to ensure a rollback on failure.
 
+When everything works:
 ```
 car = Car.new(name: "Fiesta")
 car.transaction_wrapper do
   car.save!
 end
+car.persisted? # => true
 ```
+
+When something goes wrong:
+```
+car = Car.new(name: nil)
+car.transaction_wrapper do
+  car.save!
+end
+car.persisted? # => false
+car.errors.full_messages # => ["Name can't be blank"]
+```
+
+These examples are too simple to be useful with transactions, but if you are working with multiple records then it will make sense.
 
 Also see the specs.
 
