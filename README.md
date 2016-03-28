@@ -1,8 +1,11 @@
 # Activerecord::Transactionable
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/activerecord/transactionable`. To experiment with that code, run `bin/console` for an interactive prompt.
+Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.
 
-TODO: Delete this and the text above, and describe your gem
+Useful as an example of correct behavior for wrapping transactions.
+
+NOTE: Rails' transactions are per-database connection, not per-model, nor per-instance,
+      see: http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html
 
 ## Installation
 
@@ -22,7 +25,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+When creating, saving, deleting within the transaction make sure to use the bang methods (`!`) in order to ensure a rollback on failure.
+
+```
+car = Car.new(name: "Fiesta")
+car.transaction_wrapper do
+  car.save!
+end
+```
+
+Also see the specs.
 
 ## Development
 
@@ -32,5 +44,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/activerecord-transactionable.
+Bug reports and pull requests are welcome on GitHub at https://github.com/pboling/activerecord-transactionable.
 
