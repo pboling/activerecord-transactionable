@@ -83,6 +83,22 @@ Meanings of `transaction_wrapper` return values:
 * **false** - An error was raised which was handled by the transaction_wrapper; the transaction failed.
 * **true** - The transaction was a success.
 
+## Update Example
+
+```
+@client = Client.find(params[:id])
+transaction_result =  @client.transaction_wrapper(lock: true) do
+                        @client.assign_attributes(client_params)
+                        @client.save!
+                      end
+if transaction_result
+  render :show, locals: { client: @client }, status: :ok
+else
+  # Something prevented update
+  render json: @client.errors, status: :unprocessable_entity
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
