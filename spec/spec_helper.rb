@@ -30,3 +30,4 @@ ActiveRecord::Base.configurations = configs
 #
 db_name = (ENV["DB"] || "sqlite").to_sym
 ActiveRecord::Base.establish_connection(db_name)
+load(File.dirname(__FILE__) + "/schema.rb")

@@ -58,6 +58,31 @@ These examples are too simple to be useful with transactions, but if you are wor
 
 Also see the specs.
 
+If you need to lock the car as well as have a transaction (note: will reload the `car`):
+```
+car = Car.new(name: nil)
+car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
+  car.save!
+end
+car.persisted? # => false
+car.errors.full_messages # => ["Name can't be blank"]
+```
+
+If you need to know if the transaction succeeded:
+```
+car = Car.new(name: nil)
+result = car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
+           car.save!
+         end
+result # => true, false or nil
+```
+
+Meanings of `transaction_wrapper` return values:
+
+**nil** - ActiveRecord::Rollback was raised, and then caught by the transaction, and not re-raised; the transaction failed.
+**false** - An error was raised which was handled by the transaction_wrapper; the transaction failed.
+**true** - The transaction was a success.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

@@ -20,6 +20,34 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
 
     module ClassMethods
       def transaction_wrapper(object: nil, **args)
+        if object
+          if args[:lock]
+            # Note with_lock will reload object!
+            object.with_lock do
+              error_handler(object: object, **args) do
+                yield
+              end
+            end
+          else
+            object.transaction do
+              error_handler(object: object, **args) do
+                yield
+              end
+            end
+          end
+        else
+          raise ArgumentError, "No object to lock!" if args[:lock]
+          ActiveRecord::Base.transaction do
+            error_handler(object: object, **args) do
+              yield
+            end
+          end
+        end
+      end
+
+      private
+
+      def error_handler(object: nil, **args)
         rescued_errors = Array(args[:rescued_errors])
         prepared_errors = Array(args[:prepared_errors])
         retriable_errors = Array(args[:retriable_errors])
@@ -29,10 +57,12 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         already_been_added_to_self, needing_added_to_self = rescued_errors.partition {|error_class| prepared_errors.include?(error_class)}
         re_try = false
         begin
-          ActiveRecord::Base.transaction do
-            yield
-          end
-          true # <= make the return value meaningful.  Meaning is either: transaction succeeded, OR raised ActiveRecord::Rollback
+          # If the block we yield to here raises an error that is not caught below the `true` will not get hit.
+          # If the error is rescued higher up, like where the transaction in active record
+          #   rescues ActiveRecord::Rollback without re-raising, then transaction_wrapper will return nil
+          # If the error is not rescued higher up the error will continue to bubble
+          yield
+          true # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
         rescue *reraisable_errors => error
           # This has highest precedence because raising is the most critical functionality of a raised error to keep
           #   if that is in the intended behavior, and this way a specific child of StandardError can be reraised while
