@@ -126,3 +126,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/pboling/activerecord-transactionable.
 
+[semver]: http://semver.org/
+[pvc]: http://docs.rubygems.org/read/chapter/16#page74
+[railsbling]: http://www.railsbling.com
+[peterboling]: http://www.peterboling.com
+[documentation]: http://rdoc.info/github/pboling/activerecord-transactionable/frames
+[homepage]: https://github.com/pboling/activerecord-transactionable
