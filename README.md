@@ -2,7 +2,7 @@
 
 Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.  Enables you to do transactions properly, including with or without locking.
 
-| Project                 |  FlagShihTzu      |
+| Project                 | Activerecord::Transactionable    |
 |------------------------ | ----------------- |
 | gem name                |  activerecord-transactionable    |
 | license                 |  MIT              |
