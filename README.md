@@ -2,6 +2,23 @@
 
 Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.
 
+| Project                 |  FlagShihTzu      |
+|------------------------ | ----------------- |
+| gem name                |  activerecord-transactionable    |
+| license                 |  MIT              |
+| expert support          |  [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github) |
+| download rank               |  [![Total Downloads](https://img.shields.io/gem/rt/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
+| version                 |  [![Gem Version](https://badge.fury.io/rb/activerecord-transactionable.png)](http://badge.fury.io/rb/activerecord-transactionable) |
+| dependencies            |  [![Dependency Status](https://gemnasium.com/pboling/activerecord-transactionable.png)](https://gemnasium.com/pboling/activerecord-transactionable) |
+| code quality            |  [![Code Climate](https://codeclimate.com/github/pboling/activerecord-transactionable.png)](https://codeclimate.com/github/pboling/activerecord-transactionable) |
+| inline documenation     |  [![Inline docs](http://inch-ci.org/github/pboling/activerecord-transactionable.png)](http://inch-ci.org/github/pboling/activerecord-transactionable) |
+| continuous integration  |  [![Build Status](https://secure.travis-ci.org/pboling/activerecord-transactionable.png?branch=master)](https://travis-ci.org/pboling/activerecord-transactionable) |
+| test coverage           |  [![Coverage Status](https://coveralls.io/repos/pboling/activerecord-transactionable/badge.png)](https://coveralls.io/r/pboling/activerecord-transactionable) |
+| homepage                |  [https://github.com/pboling/activerecord-transactionable][homepage] |
+| documentation           |  [http://rdoc.info/github/pboling/activerecord-transactionable/frames][documentation] |
+| live chat               |  [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
+| Spread ~♡ⓛⓞⓥⓔ♡~                     |  [on Coderbits](https://coderbits.com/pboling), [on Coderwall](http://coderwall.com/pboling) |
+
 Useful as an example of correct behavior for wrapping transactions.
 
 NOTE: Rails' transactions are per-database connection, not per-model, nor per-instance,
