@@ -1,5 +1,7 @@
 # Activerecord::Transactionable
 
+[![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/pboling/activerecord-transactionable.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.
 
 | Project                 |  FlagShihTzu      |
