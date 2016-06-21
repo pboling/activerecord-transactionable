@@ -116,6 +116,30 @@ else
 end
 ```
 
+## Reporting to SAAS Error Tools (like Raygun, etc)
+
+Hopefully there will be a better integration at some point, but for now, somewhere in your code do:
+
+```
+module SendToRaygun
+  def transaction_error_logger(**args)
+    super
+    if args[:error]
+      begin
+        Raygun.track_exception(args[:error])
+        Rails.logger.debug("Sent Error to Raygun: #{args[:error].class}: #{args[:error].message}")
+      rescue => e
+        Rails.logger.debug("Sending Error #{args[:error].class}: #{args[:error].message} to Raygun Failed with: #{e.class}: #{e.message}")
+      end
+    end
+  end
+end
+
+Activerecord::Transactionable::ClassMethods.class_eval do
+  prepend SendToRaygun
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
