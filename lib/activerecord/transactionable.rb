@@ -1,6 +1,10 @@
 require "activerecord/transactionable/version"
 require "active_model"
 require "active_record"
+# apparently needed for Rails 4.0 compatibility with rspec, when
+#   this gem is loaded before the rails gem by bundler, as will happen when you
+#   keep your Gemfile sorted alphabetically.
+require "active_record/validations"
 
 module Activerecord # Note lowercase "r" in Activerecord (different namespace than rails' module)
   # SRP: Provides an example of correct behavior for wrapping transactions.
