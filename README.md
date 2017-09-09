@@ -17,7 +17,7 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | homepage                |  [https://github.com/pboling/activerecord-transactionable][homepage] |
 | documentation           |  [http://rdoc.info/github/pboling/activerecord-transactionable/frames][documentation] |
 | live chat               |  [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
-| Spread ~♡ⓛⓞⓥⓔ♡~                     |  [on Coderbits](https://coderbits.com/pboling), [on Coderwall](http://coderwall.com/pboling) |
+| Spread ~♡ⓛⓞⓥⓔ♡~      |  [on AngelList](https://angel.co/peter-boling), [on Coderwall](http://coderwall.com/pboling) |
 
 Useful as an example of correct behavior for wrapping transactions.
 
