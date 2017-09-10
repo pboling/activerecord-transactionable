@@ -16,6 +16,12 @@ describe Activerecord::Transactionable do
     def self.raise_something(error)
       raise error
     end
+    def do_something(*args)
+      1
+    end
+    def self.do_something(*args)
+      1
+    end
     def logger
       self.class.logger
     end
@@ -34,6 +40,15 @@ describe Activerecord::Transactionable do
         super(error)
       end
     end
+    def do_something(args:, object: nil, retriable_errors: nil, rescued_errors: FarOutError, reraisable_errors: nil, lock: false)
+      transaction_wrapper(object: object,
+                          retriable_errors: retriable_errors,
+                          rescued_errors: rescued_errors,
+                          reraisable_errors: reraisable_errors,
+                          lock: lock) do
+        super(*args)
+      end
+    end
     def self.raise_something(error:, object: nil, retriable_errors: nil, rescued_errors: FarOutError, reraisable_errors: nil, lock: false)
       transaction_wrapper(object: object,
                           retriable_errors: retriable_errors,
@@ -41,6 +56,15 @@ describe Activerecord::Transactionable do
                           reraisable_errors: reraisable_errors,
                           lock: lock) do
         super(error)
+      end
+    end
+    def self.do_something(args:, object: nil, retriable_errors: nil, rescued_errors: FarOutError, reraisable_errors: nil, lock: false)
+      transaction_wrapper(object: object,
+                          retriable_errors: retriable_errors,
+                          rescued_errors: rescued_errors,
+                          reraisable_errors: reraisable_errors,
+                          lock: lock) do
+        super(*args)
       end
     end
     def logger
@@ -52,6 +76,19 @@ describe Activerecord::Transactionable do
   end
 
   let(:record_invalid_error) { ActiveRecord::RecordInvalid.new(PlainVanillaIceCream.new) }
+
+  context "for successful transaction" do
+    context "without concern" do
+      it("returns method result") {
+        expect(PlainVanillaIceCream.new.do_something(2)).to eq(1)
+      }
+    end
+    context "with concern" do
+      it("returns true") {
+        expect(TransactionableIceCream.new.do_something(args: 2)).to eq(true)
+      }
+    end
+  end
 
   context "for ActiveRecord::Rollback" do
     context "without concern" do
