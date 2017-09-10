@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Activerecord::Transactionable::VERSION
   spec.authors       = ["Peter Boling"]
   spec.email         = ["peter.boling@gmail.com"]
-  spec.licenses       = ["MIT"]
+  spec.licenses      = ["MIT"]
 
   spec.summary       = %q{Do ActiveRecord transactions the right way.}
   spec.description   = %q{Getting transactions right is hard, and this gem makes it easier.}
@@ -18,11 +18,16 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+  spec.required_ruby_version = ">= 2.1.0" # Uses named required parameters
 
   spec.add_dependency "activemodel"
   spec.add_dependency "activerecord"
 
-  spec.add_development_dependency "bundler", "~> 1.11"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler", "~> 1.15"
+  spec.add_development_dependency "rake", "~> 10.5"
   spec.add_development_dependency "rspec", "~> 3.4"
+  spec.add_development_dependency "appraisal", "~> 2.2"
+  spec.add_development_dependency "wwtd", "~> 1.3"
+  spec.add_development_dependency "coveralls", "~> 0.8"
+  spec.add_development_dependency "thor", "~> 0.19.1"
 end
