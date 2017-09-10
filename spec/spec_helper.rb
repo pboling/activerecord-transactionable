@@ -1,7 +1,11 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "activerecord/transactionable"
 require "yaml"
 require "logger"
+
+require "coveralls"
+Coveralls.wear!
+
+# This library
+require "activerecord/transactionable"
 
 class NullLogger < Logger
   def initialize(*args)
