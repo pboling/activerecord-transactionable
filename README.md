@@ -13,7 +13,7 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | code quality            |  [![Code Climate](https://codeclimate.com/github/pboling/activerecord-transactionable.png)](https://codeclimate.com/github/pboling/activerecord-transactionable) |
 | inline documenation     |  [![Inline docs](http://inch-ci.org/github/pboling/activerecord-transactionable.png)](http://inch-ci.org/github/pboling/activerecord-transactionable) |
 | continuous integration  |  [![Build Status](https://secure.travis-ci.org/pboling/activerecord-transactionable.png?branch=master)](https://travis-ci.org/pboling/activerecord-transactionable) |
-| test coverage           |  [![Coverage Status](https://coveralls.io/repos/pboling/activerecord-transactionable/badge.png)](https://coveralls.io/r/pboling/activerecord-transactionable) |
+| test coverage           |  [![Coverage Status](https://coveralls.io/repos/github/pboling/activerecord-transactionable/badge.svg?branch=master)](https://coveralls.io/github/pboling/activerecord-transactionable?branch=master) |
 | homepage                |  [https://github.com/pboling/activerecord-transactionable][homepage] |
 | documentation           |  [http://rdoc.info/github/pboling/activerecord-transactionable/frames][documentation] |
 | live chat               |  [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
