@@ -30,6 +30,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         :isolation,
         :joinable
     ].freeze
+    REQUIRES_NEW = TRANSACTION_METHOD_ARG_NAMES[0]
     INSIDE_TRANSACTION_ERROR_HANDLERS = [
         :rescued_errors,
         :prepared_errors,
@@ -63,8 +64,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         end
         transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
         if transaction_open
-          unless transaction_args[:require_new]
-            transaction_args[:require_new] = true
+          unless transaction_args[REQUIRES_NEW]
+            transaction_args[REQUIRES_NEW] = true
             logger.warn("[#{self}.transaction_wrapper] Opening a nested transaction. Setting require_new: true")
           else
             logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
