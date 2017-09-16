@@ -58,8 +58,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         outside_args = extract_args(args, OUTSIDE_TRANSACTION_ERROR_HANDLERS)
         transaction_open = ActiveRecord::Base.connection.transaction_open?
         raise ArgumentError, "#{self} does not know how to handle arguments: #{args.keys.inspect}" unless args.keys.empty?
-        if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect { |error| inside_args.values.include?(error) }
-          raise ArgumentError, "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{args.keys.inspect}"
+        if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect { |error| inside_args.values.flatten.uniq.include?(error) }
+          raise ArgumentError, "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
         end
         transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
         if transaction_open
