@@ -105,8 +105,9 @@ describe Activerecord::Transactionable do
           TransactionableIceCream.new.raise_something(error: ActiveRecord::Rollback)
         }.to_not raise_error
       }
-      it("returns nil") { # Because not re-raised
-        expect(TransactionableIceCream.new.raise_something(error: ActiveRecord::Rollback)).to be nil
+      it("returns nil") {
+        # Because not re-raised, and because the error is caught by Rails outside the context of our inner transaction error handling
+        expect(TransactionableIceCream.new.raise_something(error: ActiveRecord::Rollback)).to eq(nil)
       }
     end
   end
@@ -134,7 +135,7 @@ describe Activerecord::Transactionable do
         expect(object.errors.full_messages).to eq ["Topping can't be blank"]
       }
       it("logs error") {
-        expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError")
+        expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside]")
         TransactionableIceCream.raise_something(error: FarOutError, object: object)
       }
       context "with lock" do
@@ -151,7 +152,7 @@ describe Activerecord::Transactionable do
           expect(object.errors.full_messages).to eq ["Topping can't be blank"]
         }
         it("logs error") {
-          expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError")
+          expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside]")
           TransactionableIceCream.raise_something(error: FarOutError, object: object, lock: true)
         }
       end
@@ -207,7 +208,7 @@ describe Activerecord::Transactionable do
             expect(object.errors.full_messages).to eq ["FarOutError"]
           }
           it("logs error") {
-            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError")
+            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside]")
             TransactionableIceCream.raise_something(error: FarOutError, object: object)
           }
           context "with lock" do
@@ -222,7 +223,7 @@ describe Activerecord::Transactionable do
               expect(object.errors.full_messages).to eq ["FarOutError"]
             }
             it("logs error") {
-              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError")
+              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside]")
               TransactionableIceCream.raise_something(error: FarOutError, object: object, lock: true)
             }
           end
@@ -235,7 +236,7 @@ describe Activerecord::Transactionable do
           }
           it("returns false") { expect(TransactionableIceCream.raise_something(error: FarOutError, object: nil)).to be false }
           it("logs error") {
-            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError")
+            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [inside]")
             TransactionableIceCream.raise_something(error: FarOutError, object: nil)
           }
           context "with lock" do
@@ -260,8 +261,8 @@ describe Activerecord::Transactionable do
           }
           it("returns false") { expect(TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError)).to be false }
           it("logs both attempts") {
-            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [1st attempt]").once
-            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [2nd attempt]").once
+            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 1st attempt]").once
+            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 2nd attempt]").once
             TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError)
           }
           context "with lock" do
@@ -272,8 +273,8 @@ describe Activerecord::Transactionable do
             }
             it("returns false") { expect(TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError, lock: true)).to be false }
             it("logs both attempts") {
-              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [1st attempt]").once
-              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [2nd attempt]").once
+              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 1st attempt]").once
+              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 2nd attempt]").once
               TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError, lock: true)
             }
           end
@@ -285,7 +286,7 @@ describe Activerecord::Transactionable do
             }.to raise_error FarOutError
           }
           it("logs error") {
-            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [re-raising!]").once
+            expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside re-raising!]").once
             expect {
               TransactionableIceCream.new.raise_something(error: FarOutError, reraisable_errors: FarOutError)
             }.to raise_error FarOutError
@@ -297,7 +298,7 @@ describe Activerecord::Transactionable do
               }.to raise_error FarOutError
             }
             it("logs error") {
-              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [re-raising!]").once
+              expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside re-raising!]").once
               expect {
                 TransactionableIceCream.new.raise_something(error: FarOutError, reraisable_errors: FarOutError, lock: true)
               }.to raise_error FarOutError
