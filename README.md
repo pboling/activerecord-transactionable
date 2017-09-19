@@ -5,7 +5,7 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | Project                 | Activerecord::Transactionable    |
 |------------------------ | ----------------- |
 | gem name                |  activerecord-transactionable    |
-| license                 |  MIT              |
+| license                 |  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
 | expert support          |  [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github) |
 | download rank               |  [![Total Downloads](https://img.shields.io/gem/rt/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
 | version                 |  [![Gem Version](https://badge.fury.io/rb/activerecord-transactionable.png)](http://badge.fury.io/rb/activerecord-transactionable) |
