@@ -1,10 +1,12 @@
-require "activerecord/transactionable/version"
 require "active_model"
 require "active_record"
 # apparently needed for Rails 4.0 compatibility with rspec, when
 #   this gem is loaded before the rails gem by bundler, as will happen when you
 #   keep your Gemfile sorted alphabetically.
 require "active_record/validations"
+
+require "activerecord/transactionable/version"
+require "activerecord/transactionable/result"
 
 module Activerecord # Note lowercase "r" in Activerecord (different namespace than rails' module)
   # SRP: Provides an example of correct behavior for wrapping transactions.
@@ -70,14 +72,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           else
             logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
           end
+        end
+        error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do
           run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do
             yield
-          end
-        else
-          error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do
-            run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do
-              yield
-            end
           end
         end
       end
@@ -156,11 +154,11 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           # If we were already inside a transaction, such that this one is nested,
           #   then the result of the yield is what we want to return, to preserve the innermost result
           result = yield
-          # When in the outside context we need to preserve the inside result so it bubles up unmolested with the "meaningful" result of the transaction.
-          if transaction_open || local_context == OUTSIDE_CONTEXT
-            result # <= preserve the meaningful return value.  Meaning: transaction succeeded, no errors raised
+          # When in the outside context we need to preserve the inside result so it bubbles up unmolested with the "meaningful" result of the transaction.
+          if result.is_a?(Activerecord::Transactionable::Result)
+            result # <= preserve the meaningful return value
           else
-            true # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
+            Activerecord::Transactionable::Result.new(true) # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
           end
         rescue *reraisable_errors => error
           # This has highest precedence because raising is the most critical functionality of a raised error to keep
@@ -175,7 +173,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           #          To avoid the infinite recursion, we track the retry state
           if re_try
             transaction_error_logger(object: object, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context} 2nd attempt]")
-            false # <= make the return value meaningful.  Meaning is: transaction failed after two attempts
+            Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed after two attempts
           else
             re_try = true
             # Not adding error to base when retrying, because otherwise the added error may
@@ -186,10 +184,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         rescue *already_been_added_to_self => error
           # ActiveRecord::RecordInvalid, when done correctly, will have already added the error to object.
           transaction_error_logger(object: nil, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
-          false # <= make the return value meaningful.  Meaning is: transaction failed
+          Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed
         rescue *needing_added_to_self => error
           transaction_error_logger(object: object, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
-          false # <= make the return value meaningful.  Meaning is: transaction failed
+          Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed
         end
       end
 

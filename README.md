@@ -24,6 +24,29 @@ Useful as an example of correct behavior for wrapping transactions.
 NOTE: Rails' transactions are per-database connection, not per-model, nor per-instance,
       see: http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html
 
+## Upgrading to Version 2
+
+In version 1 the `transaction_wrapper` returned `true` or `false`.  In version 2 it returns an instance of `Activerecord::Transactionable::Result`, which has a `value`, and two methods:
+```ruby
+result = transaction_wrapper(...) do
+  something
+end
+result.fail?
+result.success?
+```
+Where you used to have:
+```ruby
+if result
+  # ...
+end
+```
+You must update to:
+```ruby
+if result.success?
+  # ...
+end
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -91,7 +114,8 @@ car = Car.new(name: nil)
 result = car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
            car.save!
          end
-result # => true, false or nil
+result # => an instance of Activerecord::Transactionable::Result
+result.success? # => true or false
 ```
 
 Meanings of `transaction_wrapper` return values:
@@ -108,7 +132,7 @@ transaction_result =  @client.transaction_wrapper(lock: true) do
                         @client.assign_attributes(client_params)
                         @client.save!
                       end
-if transaction_result
+if transaction_result.success?
   render :show, locals: { client: @client }, status: :ok
 else
   # Something prevented update
