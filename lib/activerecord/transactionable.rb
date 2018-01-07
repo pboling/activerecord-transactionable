@@ -49,8 +49,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
     OUTSIDE_CONTEXT = "outside".freeze
 
     def transaction_wrapper(**args)
-      self.class.transaction_wrapper(object: self, **args) do
-        yield
+      self.class.transaction_wrapper(object: self, **args) do |is_retry|
+        yield is_retry
       end
     end
 
@@ -73,9 +73,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
             logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
           end
         end
-        error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do
+        error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do |outside_is_retry|
           run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do |is_retry|
-            yield is_retry
+            # regardless of the retry being inside or outside the transaction, it is still a retry.
+            yield outside_is_retry || is_retry
           end
         end
       end

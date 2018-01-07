@@ -733,6 +733,27 @@ describe Activerecord::Transactionable do
               TransactionableIceCream.do_switch(args: 'bear', retriable_errors: FirstTimeError, rescued_errors: OnRetryError)
             }
           end
+          context "outside_retriable" do
+            context "not nested" do
+              it("does not raise") {
+                expect {
+                  TransactionableIceCream.do_switch(args: 'fox', outside_retriable_errors: FirstTimeError, outside_rescued_errors: OnRetryError)
+                }.to_not raise_error
+              }
+              it("returns false") {
+                tresult = TransactionableIceCream.do_switch(args: 'turtle', outside_retriable_errors: FirstTimeError, outside_rescued_errors: OnRetryError)
+                expect(tresult.fail?).to be true
+              }
+              context 'second error is not retriable or rescuable' do
+                it("logs first attempt, then raises") {
+                  expect(TransactionableIceCream.logger).to receive(:error).with("[TransactionableIceCream.transaction_wrapper] FirstTimeError: it is the first time with bird [outside 1st attempt]").once
+                  expect {
+                    TransactionableIceCream.do_switch(args: 'bird', outside_retriable_errors: FirstTimeError)
+                  }.to raise_error(OnRetryError, 'it is a retry with bird')
+                }
+              end
+            end
+          end
         end
       end
     end
