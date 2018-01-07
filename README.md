@@ -65,7 +65,7 @@ Or install it yourself as:
 
 ## Usage
 
-```
+```ruby
 class Car < ActiveRecord::Base
   include Activerecord::Transactionable # Note lowercase "r" in Activerecord (different namespace than rails' module)
 
@@ -76,7 +76,8 @@ end
 When creating, saving, deleting within the transaction make sure to use the bang methods (`!`) in order to ensure a rollback on failure.
 
 When everything works:
-```
+
+```ruby
 car = Car.new(name: "Fiesta")
 car.transaction_wrapper do
   car.save!
@@ -85,7 +86,8 @@ car.persisted? # => true
 ```
 
 When something goes wrong:
-```
+
+```ruby
 car = Car.new(name: nil)
 car.transaction_wrapper do
   car.save!
@@ -99,7 +101,8 @@ These examples are too simple to be useful with transactions, but if you are wor
 Also see the specs.
 
 If you need to lock the car as well as have a transaction (note: will reload the `car`):
-```
+
+```ruby
 car = Car.new(name: nil)
 car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
   car.save!
@@ -109,7 +112,8 @@ car.errors.full_messages # => ["Name can't be blank"]
 ```
 
 If you need to know if the transaction succeeded:
-```
+
+```ruby
 car = Car.new(name: nil)
 result = car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
            car.save!
@@ -126,7 +130,7 @@ Meanings of `transaction_wrapper` return values:
 
 ## Update Example
 
-```
+```ruby
 @client = Client.find(params[:id])
 transaction_result =  @client.transaction_wrapper(lock: true) do
                         @client.assign_attributes(client_params)
@@ -140,11 +144,41 @@ else
 end
 ```
 
+## Find or create
+
+NOTE: The `is_retry` is passed to the block by the gem, and indicates whether the block is running for the first time or the second time.
+The block will never be retried more than once.
+
+```ruby
+Car.transaction_wrapper(outside_retriable_errors: ActivRecord::RecordNotFound) do |is_retry|
+  if is_retry
+    Car.create!(vin: vin)
+  else
+    Car.find_by!(vin: vin)
+  end
+end
+```
+
+## Create or find
+
+NOTE: The `is_retry` is passed to the block by the gem, and indicates whether the block is running for the first time or the second time.
+The block will never be retried more than once.
+
+```ruby
+Car.transaction_wrapper(outside_retriable_errors: ActivRecord::RecordNotUnique) do |is_retry|
+  if is_retry
+    Car.find_by!(vin: vin)
+  else
+    Car.create!(vin: vin)
+  end
+end
+```
+
 ## Reporting to SAAS Error Tools (like Raygun, etc)
 
 Hopefully there will be a better integration at some point, but for now, somewhere in your code do:
 
-```
+```ruby
 module SendToRaygun
   def transaction_error_logger(**args)
     super

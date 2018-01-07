@@ -74,8 +74,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           end
         end
         error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do
-          run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do
-            yield
+          run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do |is_retry|
+            yield is_retry
           end
         end
       end
@@ -88,22 +88,22 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
             # Note: with_lock will reload object!
             # Note: with_lock does not accept arguments like transaction does.
             object.with_lock do
-              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do
-                yield
+              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
+                yield is_retry
               end
             end
           else
             object.transaction(**transaction_args) do
-              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do
-                yield
+              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
+                yield is_retry
               end
             end
           end
         else
           raise ArgumentError, "No object to lock!" if lock
           ActiveRecord::Base.transaction(**transaction_args) do
-            error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do
-              yield
+            error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
+              yield is_retry
             end
           end
         end
@@ -125,8 +125,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_INSIDE)
         already_been_added_to_self, needing_added_to_self = rescued_errors.partition {|error_class| prepared_errors.include?(error_class)}
         local_context = INSIDE_CONTEXT
-        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do
-          yield
+        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do |is_retry|
+          yield is_retry
         end
       end
 
@@ -139,8 +139,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_OUTSIDE)
         already_been_added_to_self, needing_added_to_self = rescued_errors.partition {|error_class| prepared_errors.include?(error_class)}
         local_context = OUTSIDE_CONTEXT
-        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do
-          yield
+        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do |is_retry|
+          yield is_retry
         end
       end
 
@@ -153,7 +153,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           # If the error is not rescued higher up the error will continue to bubble
           # If we were already inside a transaction, such that this one is nested,
           #   then the result of the yield is what we want to return, to preserve the innermost result
-          result = yield
+          # We pass the retry state along to yield so that the code implementing
+          #   the transaction_wrapper can switch behavior on a retry
+          #   (e.g. create => find)
+          result = yield re_try
           # When in the outside context we need to preserve the inside result so it bubbles up unmolested with the "meaningful" result of the transaction.
           if result.is_a?(Activerecord::Transactionable::Result)
             result # <= preserve the meaningful return value
