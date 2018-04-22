@@ -122,12 +122,6 @@ result # => an instance of Activerecord::Transactionable::Result
 result.success? # => true or false
 ```
 
-Meanings of `transaction_wrapper` return values:
-
-* **nil** - ActiveRecord::Rollback was raised, and then caught by the transaction, and not re-raised; the transaction failed.
-* **false** - An error was raised which was handled by the transaction_wrapper; the transaction failed.
-* **true** - The transaction was a success.
-
 ## Update Example
 
 ```ruby
