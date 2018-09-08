@@ -1,6 +1,6 @@
 # Activerecord::Transactionable
 
-Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.  Enables you to do transactions properly, including with or without locking.
+Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.  Enables you to do transactions properly, with custom rescues and retry, including with or without locking.
 
 | Project                 | Activerecord::Transactionable    |
 |------------------------ | ----------------- |
