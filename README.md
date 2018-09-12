@@ -8,10 +8,10 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | license                 |  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) |
 | download rank               |  [![Total Downloads](https://img.shields.io/gem/rt/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) [![Daily Downloads](https://img.shields.io/gem/rd/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
 | version                 |  [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
-| dependencies            |  [![Depfu](https://badges.depfu.com/badges/96a4d507f1a61a9368655f60fa3cb70f/count.svg)](https://depfu.com/github/pboling/activerecord-transactionable?project=Bundler) |
+| dependencies            |  [![Depfu](https://badges.depfu.com/badges/96a4d507f1a61a9368655f60fa3cb70f/count.svg)](https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653) |
 | continuous integration  |  [![Build](https://img.shields.io/travis/pboling/activerecord-transactionable.svg)](https://travis-ci.org/pboling/activerecord-transactionable) |
 | test coverage           |  [![Test Coverage](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage)](https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage) [![Coverage Status](https://coveralls.io/repos/github/pboling/activerecord-transactionable/badge.svg?branch=master)](https://coveralls.io/github/pboling/activerecord-transactionable?branch=master) |
-| code quality            |  [![Code Climate](https://codeclimate.com/github/pboling/activerecord-transactionable.png)](https://codeclimate.com/github/pboling/activerecord-transactionable) |
+| code quality            |  [![Maintainability](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability)](https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability) |
 | code triage             |  [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)](https://www.codetriage.com/pboling/activerecord-transactionable) |
 | inline documenation     |  [![Inline docs](http://inch-ci.org/github/pboling/activerecord-transactionable.png)](http://inch-ci.org/github/pboling/activerecord-transactionable) |
 | homepage                |  [on Github.com][homepage], [on Railsbling.com][blogpage] |
