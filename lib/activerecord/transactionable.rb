@@ -1,12 +1,12 @@
-require "active_model"
-require "active_record"
+require 'active_model'
+require 'active_record'
 # apparently needed for Rails 4.0 compatibility with rspec, when
 #   this gem is loaded before the rails gem by bundler, as will happen when you
 #   keep your Gemfile sorted alphabetically.
-require "active_record/validations"
+require 'active_record/validations'
 
-require "activerecord/transactionable/version"
-require "activerecord/transactionable/result"
+require 'activerecord/transactionable/version'
+require 'activerecord/transactionable/result'
 
 module Activerecord # Note lowercase "r" in Activerecord (different namespace than rails' module)
   # SRP: Provides an example of correct behavior for wrapping transactions.
@@ -15,38 +15,38 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
   module Transactionable
     extend ActiveSupport::Concern
 
-    DEFAULT_ERRORS_TO_HANDLE_INSIDE_TRANSACTION = []
-    DEFAULT_ERRORS_PREPARE_ON_SELF_INSIDE = []
-    DEFAULT_ERRORS_TO_HANDLE_OUTSIDE_TRANSACTION = [ ActiveRecord::RecordInvalid ]
-    DEFAULT_ERRORS_PREPARE_ON_SELF_OUTSIDE = [ ActiveRecord::RecordInvalid ]
+    DEFAULT_ERRORS_TO_HANDLE_INSIDE_TRANSACTION = [].freeze
+    DEFAULT_ERRORS_PREPARE_ON_SELF_INSIDE = [].freeze
+    DEFAULT_ERRORS_TO_HANDLE_OUTSIDE_TRANSACTION = [ActiveRecord::RecordInvalid].freeze
+    DEFAULT_ERRORS_PREPARE_ON_SELF_OUTSIDE = [ActiveRecord::RecordInvalid].freeze
     # These errors (and possibly others) will invalidate the transaction (on PostgreSQL and possibly other databases).
     # This means that if you did rescue them inside a transaction (or a nested transaction) all subsequent queries would fail.
     ERRORS_TO_DISALLOW_INSIDE_TRANSACTION = [
-        ActiveRecord::RecordInvalid,
-        ActiveRecord::StatementInvalid,
-        ActiveRecord::RecordNotUnique
+      ActiveRecord::RecordInvalid,
+      ActiveRecord::StatementInvalid,
+      ActiveRecord::RecordNotUnique
     ].freeze
     # http://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/DatabaseStatements.html#method-i-transaction
-    TRANSACTION_METHOD_ARG_NAMES = [
-        :requires_new,
-        :isolation,
-        :joinable
+    TRANSACTION_METHOD_ARG_NAMES = %i[
+      requires_new
+      isolation
+      joinable
     ].freeze
     REQUIRES_NEW = TRANSACTION_METHOD_ARG_NAMES[0]
-    INSIDE_TRANSACTION_ERROR_HANDLERS = [
-        :rescued_errors,
-        :prepared_errors,
-        :retriable_errors,
-        :reraisable_errors
+    INSIDE_TRANSACTION_ERROR_HANDLERS = %i[
+      rescued_errors
+      prepared_errors
+      retriable_errors
+      reraisable_errors
     ].freeze
-    OUTSIDE_TRANSACTION_ERROR_HANDLERS = [
-        :outside_rescued_errors,
-        :outside_prepared_errors,
-        :outside_retriable_errors,
-        :outside_reraisable_errors
+    OUTSIDE_TRANSACTION_ERROR_HANDLERS = %i[
+      outside_rescued_errors
+      outside_prepared_errors
+      outside_retriable_errors
+      outside_reraisable_errors
     ].freeze
-    INSIDE_CONTEXT = "inside".freeze
-    OUTSIDE_CONTEXT = "outside".freeze
+    INSIDE_CONTEXT = 'inside'.freeze
+    OUTSIDE_CONTEXT = 'outside'.freeze
 
     def transaction_wrapper(**args)
       self.class.transaction_wrapper(object: self, **args) do |is_retry|
@@ -64,13 +64,14 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect { |error| inside_args.values.flatten.uniq.include?(error) }
           raise ArgumentError, "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
         end
+
         transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
         if transaction_open
-          unless transaction_args[REQUIRES_NEW]
+          if transaction_args[REQUIRES_NEW]
+            logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
+          else
             transaction_args[REQUIRES_NEW] = true
             logger.warn("[#{self}.transaction_wrapper] Opening a nested transaction. Setting require_new: true")
-          else
-            logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
           end
         end
         error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do |outside_is_retry|
@@ -101,7 +102,8 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
             end
           end
         else
-          raise ArgumentError, "No object to lock!" if lock
+          raise ArgumentError, 'No object to lock!' if lock
+
           ActiveRecord::Base.transaction(**transaction_args) do
             error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
               yield is_retry
@@ -124,7 +126,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         reraisable_errors = Array(args[:reraisable_errors])
         rescued_errors.concat(DEFAULT_ERRORS_TO_HANDLE_INSIDE_TRANSACTION)
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_INSIDE)
-        already_been_added_to_self, needing_added_to_self = rescued_errors.partition {|error_class| prepared_errors.include?(error_class)}
+        already_been_added_to_self, needing_added_to_self = rescued_errors.partition { |error_class| prepared_errors.include?(error_class) }
         local_context = INSIDE_CONTEXT
         run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do |is_retry|
           yield is_retry
@@ -138,7 +140,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         reraisable_errors = Array(args[:outside_reraisable_errors])
         rescued_errors.concat(DEFAULT_ERRORS_TO_HANDLE_OUTSIDE_TRANSACTION)
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_OUTSIDE)
-        already_been_added_to_self, needing_added_to_self = rescued_errors.partition {|error_class| prepared_errors.include?(error_class)}
+        already_been_added_to_self, needing_added_to_self = rescued_errors.partition { |error_class| prepared_errors.include?(error_class) }
         local_context = OUTSIDE_CONTEXT
         run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self) do |is_retry|
           yield is_retry
