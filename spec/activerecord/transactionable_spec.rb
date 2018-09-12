@@ -121,6 +121,10 @@ describe Activerecord::Transactionable do
         tresult = TransactionableIceCream.new.do_something(args: 2)
         expect(tresult.success?).to eq(true)
       }
+      it('has diagnostic information') {
+        tresult = TransactionableIceCream.new.do_something(args: 2)
+        expect(tresult.to_h).to eq({:result=>"success", :type=>nil, :context=>"inside", :nested=>false})
+      }
     end
   end
 
@@ -145,6 +149,10 @@ describe Activerecord::Transactionable do
         tresult = TransactionableIceCream.new.raise_something(error: ActiveRecord::Rollback)
         expect(tresult.success?).to eq(true)
       }
+      it('has diagnostic information') {
+        tresult = TransactionableIceCream.new.raise_something(error: ActiveRecord::Rollback)
+        expect(tresult.to_h).to eq({:result=>"success", :type=>nil, :context=>"outside", :nested=>false})
+      }
     end
   end
 
@@ -167,6 +175,10 @@ describe Activerecord::Transactionable do
         tresult = object.raise_something(error: record_invalid_error)
         expect(tresult.fail?).to be true
       }
+      it('has diagnostic information') {
+        tresult = object.raise_something(error: record_invalid_error)
+        expect(tresult.to_h).to eq({:result=>"fail", :type=>"already_added", :context=>"outside", :nested=>false, :error => "ActiveRecord::RecordInvalid", :message => "Validation failed: "})
+      }
       it('adds error to base') {
         object.valid?
         error = ActiveRecord::RecordInvalid.new(object)
@@ -186,6 +198,10 @@ describe Activerecord::Transactionable do
         it('is fail') {
           tresult = object.raise_something(error: record_invalid_error, lock: true)
           expect(tresult.fail?).to be true
+        }
+        it('has diagnostic information') {
+          tresult = object.raise_something(error: record_invalid_error, lock: true)
+          expect(tresult.to_h).to eq({:result=>"fail", :type=>"already_added", :context=>"outside", :nested=>false, :error => "ActiveRecord::RecordInvalid", :message => "Validation failed: "})
         }
         it('adds error to base') {
           object.valid?
@@ -220,6 +236,10 @@ describe Activerecord::Transactionable do
           tresult = TransactionableIceCream.new.raise_something(error: FarOutError, rescued_errors: FarOutError)
           expect(tresult.fail?).to be true
         }
+        it('has diagnostic information') {
+          tresult = TransactionableIceCream.new.raise_something(error: FarOutError, rescued_errors: FarOutError)
+          expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+        }
         it('adds error to base') {
           ice_cream = TransactionableIceCream.new
           ice_cream.raise_something(error: FarOutError, rescued_errors: FarOutError)
@@ -234,6 +254,10 @@ describe Activerecord::Transactionable do
           it('is fail') {
             tresult = TransactionableIceCream.new.raise_something(error: FarOutError, lock: true, rescued_errors: FarOutError)
             expect(tresult.fail?).to be true
+          }
+          it('has diagnostic information') {
+            tresult = TransactionableIceCream.new.raise_something(error: FarOutError, lock: true, rescued_errors: FarOutError)
+            expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
           }
           it('adds error to base') {
             ice_cream = TransactionableIceCream.new
@@ -304,6 +328,10 @@ describe Activerecord::Transactionable do
               tresult = TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError)
               expect(tresult.fail?).to be true
             }
+            it('has diagnostic information') {
+              tresult = TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError)
+              expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+            }
             it('logs both attempts') {
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 1st attempt]').once
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 2nd attempt]').once
@@ -318,6 +346,10 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 tresult = TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError, lock: true)
                 expect(tresult.fail?).to be true
+              }
+              it('has diagnostic information') {
+                tresult = TransactionableIceCream.new.raise_something(error: FarOutError, retriable_errors: FarOutError, lock: true)
+                expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
               }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 1st attempt]').once
@@ -339,6 +371,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
+              }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested inside 1st attempt]').once
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested inside 2nd attempt]').once
@@ -354,6 +389,9 @@ describe Activerecord::Transactionable do
                   expect { subject }.to_not raise_error
                 }
                 it('is fail') { expect(subject.fail?).to be true }
+                it('has diagnostic information') {
+                  expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
+                }
                 it('logs both attempts') {
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested inside 1st attempt]').once
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested inside 2nd attempt]').once
@@ -373,6 +411,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+              }
               context 'with lock' do
                 subject do
                   TransactionableIceCream.new.do_block(args: [1], retriable_errors: FarOutError, lock: true) do
@@ -383,6 +424,9 @@ describe Activerecord::Transactionable do
                   expect { subject }.to_not raise_error
                 }
                 it('is fail') { expect(subject.fail?).to be true }
+                it('has diagnostic information') {
+                  expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+                }
                 it('logs both attempts') {
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 1st attempt]').once
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [inside 2nd attempt]').once
@@ -399,9 +443,13 @@ describe Activerecord::Transactionable do
                 TransactionableIceCream.new.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
               end.to_not raise_error
             }
-            it('returns false') {
+            it('is fail') {
               tresult = TransactionableIceCream.new.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
               expect(tresult.fail?).to be true
+            }
+            it('has diagnostic information') {
+              tresult = TransactionableIceCream.new.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
+              expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
             }
             it('logs both attempts') {
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [outside 1st attempt]').once
@@ -417,6 +465,10 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 tresult = TransactionableIceCream.new.raise_something(error: FarOutError, outside_retriable_errors: FarOutError, lock: true)
                 expect(tresult.fail?).to be true
+              }
+              it('has diagnostic information') {
+                tresult = TransactionableIceCream.new.raise_something(error: FarOutError, outside_retriable_errors: FarOutError, lock: true)
+                expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
               }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [outside 1st attempt]').once
@@ -438,6 +490,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+              }
               context 'with lock' do
                 subject do
                   TransactionableIceCream.new.do_block(args: [1], outside_retriable_errors: FarOutError, lock: true) do
@@ -448,6 +503,9 @@ describe Activerecord::Transactionable do
                   expect { subject }.to_not raise_error
                 }
                 it('is fail') { expect(subject.fail?).to be true }
+                it('has diagnostic information') {
+                  expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+                }
                 it('logs both attempts') {
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [outside 1st attempt]').once
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [outside 2nd attempt]').once
@@ -467,6 +525,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
+              }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested outside 1st attempt]').once
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested outside 2nd attempt]').once
@@ -482,6 +543,9 @@ describe Activerecord::Transactionable do
                   expect { subject }.to_not raise_error
                 }
                 it('is fail') { expect(subject.fail?).to be true }
+                it('has diagnostic information') {
+                  expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
+                }
                 it('logs both attempts') {
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested outside 1st attempt]').once
                   expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] On TransactionableIceCream FarOutError: FarOutError [nested outside 2nd attempt]').once
@@ -504,6 +568,10 @@ describe Activerecord::Transactionable do
             tresult = TransactionableIceCream.raise_something(error: FarOutError, object: object, rescued_errors: FarOutError)
             expect(tresult.fail?).to be true
           }
+          it('has diagnostic information') {
+            tresult = TransactionableIceCream.raise_something(error: FarOutError, object: object, rescued_errors: FarOutError)
+            expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+          }
           it('adds error to base') {
             TransactionableIceCream.raise_something(error: FarOutError, object: object, rescued_errors: FarOutError)
             expect(object.errors.full_messages).to eq ['FarOutError']
@@ -521,6 +589,10 @@ describe Activerecord::Transactionable do
             it('is fail') {
               tresult = TransactionableIceCream.raise_something(error: FarOutError, object: object, lock: true, rescued_errors: FarOutError)
               expect(tresult.fail?).to be true
+            }
+            it('has diagnostic information') {
+              tresult = TransactionableIceCream.raise_something(error: FarOutError, object: object, lock: true, rescued_errors: FarOutError)
+              expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
             }
             it('adds error to base') {
               TransactionableIceCream.raise_something(error: FarOutError, object: object, lock: true, rescued_errors: FarOutError)
@@ -541,6 +613,10 @@ describe Activerecord::Transactionable do
           it('is fail') {
             tresult = TransactionableIceCream.raise_something(error: FarOutError, object: nil, rescued_errors: FarOutError)
             expect(tresult.fail?).to be true
+          }
+          it('has diagnostic information') {
+            tresult = TransactionableIceCream.raise_something(error: FarOutError, object: nil, rescued_errors: FarOutError)
+            expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
           }
           it('logs error') {
             expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [inside]')
@@ -625,6 +701,10 @@ describe Activerecord::Transactionable do
               tresult = TransactionableIceCream.raise_something(error: FarOutError, retriable_errors: FarOutError)
               expect(tresult.fail?).to be true
             }
+            it('has diagnostic information') {
+              tresult = TransactionableIceCream.raise_something(error: FarOutError, retriable_errors: FarOutError)
+              expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+            }
             it('logs both attempts') {
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [inside 1st attempt]').once
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [inside 2nd attempt]').once
@@ -644,6 +724,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
+              }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [nested inside 1st attempt]').once
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [nested inside 2nd attempt]').once
@@ -662,6 +745,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"inside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+              }
             end
           end
         end
@@ -672,9 +758,13 @@ describe Activerecord::Transactionable do
                 TransactionableIceCream.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
               end.to_not raise_error
             }
-            it('returns false') {
+            it('is fail') {
               tresult = TransactionableIceCream.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
               expect(tresult.fail?).to be true
+            }
+            it('has diagnostic information') {
+              tresult = TransactionableIceCream.raise_something(error: FarOutError, outside_retriable_errors: FarOutError)
+              expect(tresult.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
             }
             it('logs both attempts') {
               expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [outside 1st attempt]').once
@@ -695,6 +785,9 @@ describe Activerecord::Transactionable do
               it('is fail') {
                 expect(subject.fail?).to be true
               }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>false, :error => "FarOutError", :message => "FarOutError"})
+              }
             end
             context 'inner block' do
               subject do
@@ -707,6 +800,9 @@ describe Activerecord::Transactionable do
               }
               it('is fail') {
                 expect(subject.fail?).to be true
+              }
+              it('has diagnostic information') {
+                expect(subject.to_h).to eq({:result=>"fail", :type=>"retriable", :context=>"outside", :nested=>true, :error => "FarOutError", :message => "FarOutError"})
               }
               it('logs both attempts') {
                 expect(TransactionableIceCream.logger).to receive(:error).with('[TransactionableIceCream.transaction_wrapper] FarOutError: FarOutError [nested outside 1st attempt]').once
@@ -725,6 +821,10 @@ describe Activerecord::Transactionable do
           it('is fail') {
             tresult = TransactionableIceCream.do_switch(args: 'wolf', retriable_errors: FirstTimeError, rescued_errors: OnRetryError)
             expect(tresult.fail?).to be true
+          }
+          it('has diagnostic information') {
+            tresult = TransactionableIceCream.do_switch(args: 'wolf', retriable_errors: FirstTimeError, rescued_errors: OnRetryError)
+            expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"inside", :nested=>false, :error => "OnRetryError", :message => "it is a retry with wolf"})
           }
           context 'second error is not retriable or rescuable' do
             it('logs first attempt, then raises') {
@@ -755,9 +855,13 @@ describe Activerecord::Transactionable do
                   TransactionableIceCream.do_switch(args: 'fox', outside_retriable_errors: FirstTimeError, outside_rescued_errors: OnRetryError)
                 end.to_not raise_error
               }
-              it('returns false') {
+              it('is fail') {
                 tresult = TransactionableIceCream.do_switch(args: 'turtle', outside_retriable_errors: FirstTimeError, outside_rescued_errors: OnRetryError)
                 expect(tresult.fail?).to be true
+              }
+              it('has diagnostic information') {
+                tresult = TransactionableIceCream.do_switch(args: 'turtle', outside_retriable_errors: FirstTimeError, outside_rescued_errors: OnRetryError)
+                expect(tresult.to_h).to eq({:result=>"fail", :type=>"needing_added", :context=>"outside", :nested=>false, error: "OnRetryError", message: "it is a retry with turtle"})
               }
               context 'second error is not retriable or rescuable' do
                 it('logs first attempt, then raises') {

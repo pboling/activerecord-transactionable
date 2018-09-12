@@ -164,7 +164,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           if result.is_a?(Activerecord::Transactionable::Result)
             result # <= preserve the meaningful return value
           else
-            Activerecord::Transactionable::Result.new(true) # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
+            Activerecord::Transactionable::Result.new(true, context: local_context, transaction_open: transaction_open) # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
           end
         rescue *reraisable_errors => error
           # This has highest precedence because raising is the most critical functionality of a raised error to keep
@@ -179,7 +179,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           #          To avoid the infinite recursion, we track the retry state
           if re_try
             transaction_error_logger(object: object, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context} 2nd attempt]")
-            Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed after two attempts
+            Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, type: 'retriable') # <= make the return value meaningful.  Meaning is: transaction failed after two attempts
           else
             re_try = true
             # Not adding error to base when retrying, because otherwise the added error may
@@ -190,10 +190,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         rescue *already_been_added_to_self => error
           # ActiveRecord::RecordInvalid, when done correctly, will have already added the error to object.
           transaction_error_logger(object: nil, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
-          Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed
+          Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, type: 'already_added') # <= make the return value meaningful.  Meaning is: transaction failed
         rescue *needing_added_to_self => error
           transaction_error_logger(object: object, error: error, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
-          Activerecord::Transactionable::Result.new(false) # <= make the return value meaningful.  Meaning is: transaction failed
+          Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, type: 'needing_added') # <= make the return value meaningful.  Meaning is: transaction failed
         end
       end
 
