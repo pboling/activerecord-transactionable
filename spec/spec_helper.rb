@@ -1,5 +1,10 @@
 require 'yaml'
 require 'logger'
+begin
+  require 'pry-byebug'
+rescue LoadError
+  # Not MRI == No Pry/Byebug
+end
 
 require 'coveralls'
 Coveralls.wear!

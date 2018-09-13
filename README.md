@@ -134,18 +134,19 @@ transaction_result =  @client.transaction_wrapper(lock: true) do
 if transaction_result.success?
   render :show, locals: { client: @client }, status: :ok
 else
-  # Something prevented update
-  render json: @client.errors, status: :unprocessable_entity
+  # Something prevented update, transaction_result.to_h will have all the available details
+  render json: { record_errors: @client.errors, transaction_result: transaction_result.to_h }, status: :unprocessable_entity
 end
 ```
 
 ## Find or create
 
-NOTE: The `is_retry` is passed to the block by the gem, and indicates whether the block is running for the first time or the second time.
+NOTE: The `is_retry` is passed to the block by the gem, and indicates whether the block is running for the first time or the second, or nth, time.
 The block will never be retried more than once.
 
 ```ruby
-Car.transaction_wrapper(outside_retriable_errors: ActivRecord::RecordNotFound) do |is_retry|
+Car.transaction_wrapper(outside_retriable_errors: ActivRecord::RecordNotFound, outside_num_retry_attempts: 3) do |is_retry|
+  # is_retry will be falsey on first attempt, thereafter will be the integer number of the attempt
   if is_retry
     Car.create!(vin: vin)
   else
@@ -161,6 +162,7 @@ The block will never be retried more than once.
 
 ```ruby
 Car.transaction_wrapper(outside_retriable_errors: ActivRecord::RecordNotUnique) do |is_retry|
+  # is_retry will be falsey on first attempt, thereafter will be the integer number of the attempt
   if is_retry
     Car.find_by!(vin: vin)
   else
