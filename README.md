@@ -184,7 +184,7 @@ module SendToRaygun
         Raygun.track_exception(args[:error])
         Rails.logger.debug("Sent Error to Raygun: #{args[:error].class}: #{args[:error].message}")
       rescue => e
-        Rails.logger.debug("Sending Error #{args[:error].class}: #{args[:error].message} to Raygun Failed with: #{e.class}: #{e.message}")
+        Rails.logger.error("Sending Error #{args[:error].class}: #{args[:error].message} to Raygun Failed with: #{e.class}: #{e.message}")
       end
     end
   end
