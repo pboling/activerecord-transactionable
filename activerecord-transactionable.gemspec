@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.1.0' # Uses named required parameters
 
-  spec.add_dependency 'activemodel', '>= 4.0.0'
+  spec.add_dependency 'activemodel', '6.0.0'
   spec.add_dependency 'activerecord', '>= 4.0.0'
 
   spec.add_development_dependency 'appraisal', '~> 2.2'
