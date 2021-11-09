@@ -19,19 +19,17 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.1.0"
+  spec.required_ruby_version = ">= 2.5.0"
 
   ruby_version = Gem::Version.new(RUBY_VERSION)
   minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
   linting = minimum_version.call("2.6")
   coverage = minimum_version.call("2.6")
-  good_sqlite_constraint = minimum_version.call("2.5")
-  debug = minimum_version.call("2.4")
 
   spec.add_dependency "activemodel", ">= 4.0.0"
   spec.add_dependency "activerecord", ">= 4.0.0"
 
-  spec.add_development_dependency "byebug", "~> 11.1" if debug
+  spec.add_development_dependency "byebug", "~> 11.1"
   spec.add_development_dependency "factory_bot", ">= 4.0"
   spec.add_development_dependency "rake", ">= 12.0"
   spec.add_development_dependency "rspec", "~> 3.10"
@@ -52,9 +50,6 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency("simplecov", "~> 0.21")
     spec.add_development_dependency("simplecov-cobertura", "~> 1.4")
   end
-  # sqlite version constraint: https://stackoverflow.com/a/54729071/213191
-  # TODO: Relax and update the constraint when dropping support for <= activerecord 5.2.2
-  # NOTE: Ruby 2.5+ will install Rails 6+
-  spec.add_development_dependency "sqlite3", good_sqlite_constraint ? "~> 1" : "~> 1.3.6"
+  spec.add_development_dependency "sqlite3", "~> 1"
   spec.add_development_dependency "yard", ">= 0.9.20"
 end
