@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
   linting = minimum_version.call("2.6")
   coverage = minimum_version.call("2.6")
+  good_sqlite_constraint = minimum_version.call("2.5")
   debug = minimum_version.call("2.4")
 
   spec.add_dependency "activemodel", ">= 4.0.0"
@@ -50,6 +51,9 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency("simplecov", "~> 0.21")
     spec.add_development_dependency("simplecov-cobertura", "~> 1.4")
   end
-  spec.add_development_dependency "sqlite3", "~> 1"
+  # sqlite version constraint: https://stackoverflow.com/a/54729071/213191
+  # TODO: Relax and update the constraint when dropping support for <= activerecord 5.2.2
+  # NOTE: Ruby 2.5+ will install Rails 6+
+  spec.add_development_dependency "sqlite3", good_sqlite_constraint ? "~> `" : "`~> 1.3.6"
   spec.add_development_dependency "yard", ">= 0.9.20"
 end
