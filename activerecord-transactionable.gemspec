@@ -54,6 +54,6 @@ Gem::Specification.new do |spec|
   # sqlite version constraint: https://stackoverflow.com/a/54729071/213191
   # TODO: Relax and update the constraint when dropping support for <= activerecord 5.2.2
   # NOTE: Ruby 2.5+ will install Rails 6+
-  spec.add_development_dependency "sqlite3", good_sqlite_constraint ? "~> `" : "`~> 1.3.6"
+  spec.add_development_dependency "sqlite3", good_sqlite_constraint ? "~> 1" : "`~> 1.3.6"
   spec.add_development_dependency "yard", ">= 0.9.20"
 end
