@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "byebug", "~> 11.1" if debug
   spec.add_development_dependency "factory_bot", ">= 4.0"
-  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rake", ">= 12.0"
   spec.add_development_dependency "rspec", "~> 3.10"
   spec.add_development_dependency "rspec-block_is_expected", "~> 1.0"
   if linting
