@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   coverage = minimum_version.call("2.6")
   debug = minimum_version.call("2.4")
 
-  spec.add_dependency "activemodel", ">= 4.0.0"
+  spec.add_dependency "activemodel", "6.0.2.2"
   spec.add_dependency "activerecord", ">= 4.0.0"
 
   spec.add_development_dependency "byebug", "~> 11.1" if debug
