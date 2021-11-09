@@ -1,14 +1,17 @@
-require 'active_model'
-require 'active_record'
+# frozen_string_literal: true
+
+require "active_model"
+require "active_record"
 # apparently needed for Rails 4.0 compatibility with rspec, when
 #   this gem is loaded before the rails gem by bundler, as will happen when you
 #   keep your Gemfile sorted alphabetically.
-require 'active_record/validations'
+require "active_record/validations"
 
-require 'activerecord/transactionable/version'
-require 'activerecord/transactionable/result'
+require "activerecord/transactionable/version"
+require "activerecord/transactionable/result"
 
-module Activerecord # Note lowercase "r" in Activerecord (different namespace than rails' module)
+# Note lowercase "r" in Activerecord (different namespace than rails' module)
+module Activerecord
   # SRP: Provides an example of correct behavior for wrapping transactions.
   # NOTE: Rails' transactions are per-database connection, not per-model, nor per-instance,
   #       see: http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html
@@ -48,13 +51,11 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
       outside_reraisable_errors
       outside_num_retry_attempts
     ].freeze
-    INSIDE_CONTEXT = 'inside'.freeze
-    OUTSIDE_CONTEXT = 'outside'.freeze
+    INSIDE_CONTEXT = "inside"
+    OUTSIDE_CONTEXT = "outside"
 
-    def transaction_wrapper(**args)
-      self.class.transaction_wrapper(object: self, **args) do |is_retry|
-        yield is_retry
-      end
+    def transaction_wrapper(**args, &block)
+      self.class.transaction_wrapper(object: self, **args, &block)
     end
 
     module ClassMethods
@@ -63,9 +64,15 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         inside_args = extract_args(args, INSIDE_TRANSACTION_ERROR_HANDLERS)
         outside_args = extract_args(args, OUTSIDE_TRANSACTION_ERROR_HANDLERS)
         transaction_open = ActiveRecord::Base.connection.transaction_open?
-        raise ArgumentError, "#{self} does not know how to handle arguments: #{args.keys.inspect}" unless args.keys.empty?
-        if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect { |error| inside_args.values.flatten.uniq.include?(error) }
-          raise ArgumentError, "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
+        unless args.keys.empty?
+          raise ArgumentError,
+                "#{self} does not know how to handle arguments: #{args.keys.inspect}"
+        end
+        if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect do |error|
+             inside_args.values.flatten.uniq.include?(error)
+           end
+          raise ArgumentError,
+                "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
         end
 
         transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
@@ -77,8 +84,10 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
             logger.warn("[#{self}.transaction_wrapper] Opening a nested transaction. Setting require_new: true")
           end
         end
-        error_handler_outside_transaction(object: object, transaction_open: transaction_open, **outside_args) do |outside_is_retry|
-          run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock, transaction_open: transaction_open, object: object) do |is_retry|
+        error_handler_outside_transaction(object: object, transaction_open: transaction_open,
+                                          **outside_args) do |outside_is_retry|
+          run_inside_transaction_block(transaction_args: transaction_args, inside_args: inside_args, lock: lock,
+                                       transaction_open: transaction_open, object: object) do |is_retry|
             # regardless of the retry being inside or outside the transaction, it is still a retry.
             yield outside_is_retry || is_retry
           end
@@ -87,30 +96,26 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
 
       private
 
-      def run_inside_transaction_block(transaction_args:, inside_args:, lock:, transaction_open:, object: nil)
+      def run_inside_transaction_block(transaction_args:, inside_args:, lock:, transaction_open:, object: nil, &block)
         if object
           if lock
-            # Note: with_lock will reload object!
+            # NOTE: with_lock will reload object!
             # Note: with_lock does not accept arguments like transaction does.
             object.with_lock do
-              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
-                yield is_retry
-              end
+              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args,
+&block)
             end
           else
             object.transaction(**transaction_args) do
-              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
-                yield is_retry
-              end
+              error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args,
+&block)
             end
           end
         else
-          raise ArgumentError, 'No object to lock!' if lock
+          raise ArgumentError, "No object to lock!" if lock
 
           ActiveRecord::Base.transaction(**transaction_args) do
-            error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args) do |is_retry|
-              yield is_retry
-            end
+            error_handler_inside_transaction(object: object, transaction_open: transaction_open, **inside_args, &block)
           end
         end
       end
@@ -122,7 +127,7 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         end
       end
 
-      def error_handler_inside_transaction(object: nil, transaction_open:, **args)
+      def error_handler_inside_transaction(transaction_open:, object: nil, **args, &block)
         rescued_errors = Array(args[:rescued_errors])
         prepared_errors = Array(args[:prepared_errors])
         retriable_errors = Array(args[:retriable_errors])
@@ -130,14 +135,15 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         num_retry_attempts = args[:num_retry_attempts] ? args[:num_retry_attempts].to_i : DEFAULT_NUM_RETRY_ATTEMPTS
         rescued_errors.concat(DEFAULT_ERRORS_TO_HANDLE_INSIDE_TRANSACTION)
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_INSIDE)
-        already_been_added_to_self, needing_added_to_self = rescued_errors.partition { |error_class| prepared_errors.include?(error_class) }
-        local_context = INSIDE_CONTEXT
-        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self, num_retry_attempts) do |is_retry|
-          yield is_retry
+        already_been_added_to_self, needing_added_to_self = rescued_errors.partition do |error_class|
+          prepared_errors.include?(error_class)
         end
+        local_context = INSIDE_CONTEXT
+        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors,
+                             already_been_added_to_self, needing_added_to_self, num_retry_attempts, &block)
       end
 
-      def error_handler_outside_transaction(object: nil, transaction_open:, **args)
+      def error_handler_outside_transaction(transaction_open:, object: nil, **args, &block)
         rescued_errors = Array(args[:outside_rescued_errors])
         prepared_errors = Array(args[:outside_prepared_errors])
         retriable_errors = Array(args[:outside_retriable_errors])
@@ -145,11 +151,12 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
         num_retry_attempts = args[:outside_num_retry_attempts] ? args[:outside_num_retry_attempts].to_i : DEFAULT_NUM_RETRY_ATTEMPTS
         rescued_errors.concat(DEFAULT_ERRORS_TO_HANDLE_OUTSIDE_TRANSACTION)
         prepared_errors.concat(DEFAULT_ERRORS_PREPARE_ON_SELF_OUTSIDE)
-        already_been_added_to_self, needing_added_to_self = rescued_errors.partition { |error_class| prepared_errors.include?(error_class) }
-        local_context = OUTSIDE_CONTEXT
-        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self, num_retry_attempts) do |is_retry|
-          yield is_retry
+        already_been_added_to_self, needing_added_to_self = rescued_errors.partition do |error_class|
+          prepared_errors.include?(error_class)
         end
+        local_context = OUTSIDE_CONTEXT
+        run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors,
+                             already_been_added_to_self, needing_added_to_self, num_retry_attempts, &block)
       end
 
       def run_block_with_retry(object, local_context, transaction_open, retriable_errors, reraisable_errors, already_been_added_to_self, needing_added_to_self, num_retry_attempts)
@@ -173,41 +180,46 @@ module Activerecord # Note lowercase "r" in Activerecord (different namespace th
           else
             Activerecord::Transactionable::Result.new(true, context: local_context, attempt: attempt, transaction_open: transaction_open) # <= make the return value meaningful.  Meaning: transaction succeeded, no errors raised
           end
-        rescue *reraisable_errors => error
+        rescue *reraisable_errors => e
           # This has highest precedence because raising is the most critical functionality of a raised error to keep
           #   if that is in the intended behavior, and this way a specific child of StandardError can be reraised while
           #   the parent can still be caught and added to self.errors
           # Also adds the error to the object if there is an object.
-          transaction_error_logger(object: object, error: error, result: nil, attempt: attempt, add_to: nil, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context} re-raising!]")
-          raise error
-        rescue *retriable_errors => error
+          transaction_error_logger(object: object, error: e, result: nil, attempt: attempt, add_to: nil,
+                                   additional_message: " [#{transaction_open ? "nested " : ""}#{local_context} re-raising!]")
+          raise e
+        rescue *retriable_errors => e
           # This will re-run the begin block above
           # WARNING: If the same error keeps getting thrown this would infinitely recurse!
           #          To avoid the infinite recursion, we track the retry state
           if attempt >= num_retry_attempts
-            result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, attempt: attempt, type: 'retriable') # <= make the return value meaningful.  Meaning is: transaction failed after <attempt> attempts
-            transaction_error_logger(object: object, error: error, result: result, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
+            result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: e, attempt: attempt, type: "retriable") # <= make the return value meaningful.  Meaning is: transaction failed after <attempt> attempts
+            transaction_error_logger(object: object, error: e, result: result,
+                                     additional_message: " [#{transaction_open ? "nested " : ""}#{local_context}]")
             result
           else
             re_try = true
             # Not adding error to base when retrying, because otherwise the added error may
             #   prevent the subsequent save from working, in a catch-22
-            transaction_error_logger(object: object, error: error, result: nil, attempt: attempt, add_to: nil, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
+            transaction_error_logger(object: object, error: e, result: nil, attempt: attempt, add_to: nil,
+                                     additional_message: " [#{transaction_open ? "nested " : ""}#{local_context}]")
             retry
           end
-        rescue *already_been_added_to_self => error
+        rescue *already_been_added_to_self => e
           # ActiveRecord::RecordInvalid, when done correctly, will have already added the error to object.
-          result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, attempt: attempt, type: 'already_added') # <= make the return value meaningful.  Meaning is: transaction failed
-          transaction_error_logger(object: nil, error: error, result: result, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
+          result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: e, attempt: attempt, type: "already_added") # <= make the return value meaningful.  Meaning is: transaction failed
+          transaction_error_logger(object: nil, error: e, result: result,
+                                   additional_message: " [#{transaction_open ? "nested " : ""}#{local_context}]")
           result
-        rescue *needing_added_to_self => error
-          result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: error, attempt: attempt, type: 'needing_added') # <= make the return value meaningful.  Meaning is: transaction failed
-          transaction_error_logger(object: object, error: error, result: result, additional_message: " [#{transaction_open ? 'nested ' : ''}#{local_context}]")
+        rescue *needing_added_to_self => e
+          result = Activerecord::Transactionable::Result.new(false, context: local_context, transaction_open: transaction_open, error: e, attempt: attempt, type: "needing_added") # <= make the return value meaningful.  Meaning is: transaction failed
+          transaction_error_logger(object: object, error: e, result: result,
+                                   additional_message: " [#{transaction_open ? "nested " : ""}#{local_context}]")
           result
         end
       end
 
-      def transaction_error_logger(object:, error:, result:, attempt: nil, add_to: :base, additional_message: nil, **opts)
+      def transaction_error_logger(object:, error:, result:, attempt: nil, add_to: :base, additional_message: nil, **_opts)
         # Ruby arguments, like object, are passed by reference,
         #   so this update to errors will be available to the caller
         if object.nil?

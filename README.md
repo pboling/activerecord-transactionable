@@ -27,13 +27,15 @@ NOTE: Rails' transactions are per-database connection, not per-model, nor per-in
 
 ## Upgrading to Version 2
 
-In version 1 the `transaction_wrapper` returned `true` or `false`.  In version 2 it returns an instance of `Activerecord::Transactionable::Result`, which has a `value`, and two methods:
+In version 1 the `transaction_wrapper` returned `true` or `false`.  In version 2 it returns an instance of `Activerecord::Transactionable::Result`, which has a `value`, and three methods:
 ```ruby
-result = transaction_wrapper(...) do
+args = {}
+result = transaction_wrapper(**args) do
   something
 end
 result.fail?
 result.success?
+result.to_h # => a hash with diagnostic information, particularly useful when things go wrong
 ```
 Where you used to have:
 ```ruby
@@ -53,7 +55,7 @@ end
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activerecord-transactionable'
+gem "activerecord-transactionable"
 ```
 
 And then execute:
@@ -118,7 +120,7 @@ If you need to know if the transaction succeeded:
 car = Car.new(name: nil)
 result = car.transaction_wrapper(lock: true) do # uses ActiveRecord's with_lock
            car.save!
-         end
+end
 result # => an instance of Activerecord::Transactionable::Result
 result.success? # => true or false
 ```
@@ -127,10 +129,10 @@ result.success? # => true or false
 
 ```ruby
 @client = Client.find(params[:id])
-transaction_result =  @client.transaction_wrapper(lock: true) do
+transaction_result = @client.transaction_wrapper(lock: true) do
                         @client.assign_attributes(client_params)
                         @client.save!
-                      end
+end
 if transaction_result.success?
   render :show, locals: { client: @client }, status: :ok
 else
@@ -183,7 +185,7 @@ module SendToRaygun
       begin
         Raygun.track_exception(args[:error])
         Rails.logger.debug("Sent Error to Raygun: #{args[:error].class}: #{args[:error].message}")
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error("Sending Error #{args[:error].class}: #{args[:error].message} to Raygun Failed with: #{e.class}: #{e.message}")
       end
     end
@@ -224,7 +226,7 @@ dependency on this gem using the [Pessimistic Version Constraint][pvc] with two 
 For example:
 
 ```ruby
-spec.add_dependency 'activerecord-transactionable', '~> 2.0'
+spec.add_dependency "activerecord-transactionable", "~> 2.0"
 ```
 
 ## Contributing
@@ -235,7 +237,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/pbolin
 
 * Copyright (c) 2016 - 2018 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 [license]: LICENSE
 [semver]: http://semver.org/

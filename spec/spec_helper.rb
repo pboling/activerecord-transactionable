@@ -1,40 +1,42 @@
-require 'yaml'
-require 'logger'
-begin
-  require 'pry-byebug'
-rescue LoadError
-  # Not MRI == No Pry/Byebug
+# frozen_string_literal: true
+
+ruby_version = Gem::Version.new(RUBY_VERSION)
+minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
+coverage = minimum_version.call("2.6")
+debug = minimum_version.call("2.4")
+
+if coverage
+  require "simplecov"
+  require "simplecov-cobertura"
+  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter unless ENV["HTML_COVERAGE"] == "true"
 end
 
-require 'coveralls'
-Coveralls.wear!
+# External libraries
+require "byebug" if debug
+require "rspec/block_is_expected"
 
-# This library
-require 'activerecord/transactionable'
+# This gem
+require "activerecord/transactionable"
 
-class NullLogger < Logger
-  def initialize(*args); end
+# Configs
+require "config/active_record"
+require "config/factory_bot"
+require "rspec_config/matchers"
 
-  def add(*args, &block); end
+RSpec.configure do |config|
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = ".rspec_status"
+
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
+  config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
 end
-
-ActiveRecord::Base.logger = NullLogger.new
-ActiveRecord::Migration.verbose = false
-
-configs = YAML.load_file(File.dirname(__FILE__) + '/database.yml')
-if RUBY_PLATFORM == 'java'
-  configs['sqlite']['adapter'] = 'jdbcsqlite3'
-  configs['mysql']['adapter'] = 'jdbcmysql'
-  configs['postgresql']['adapter'] = 'jdbcpostgresql'
-end
-ActiveRecord::Base.configurations = configs
-
-# Run specific adapter tests like:
-#
-#   DB=sqlite rake test:all
-#   DB=mysql rake test:all
-#   DB=postgresql rake test:all
-#
-db_name = (ENV['DB'] || 'sqlite').to_sym
-ActiveRecord::Base.establish_connection(db_name)
-load(File.dirname(__FILE__) + '/schema.rb')
