@@ -209,6 +209,10 @@ end
 * Live Chat on Gitter: [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)][chat]
 * Maintainer's Blog: [![Blog](https://img.shields.io/badge/blog-railsbling-brightgreen.svg?style=flat)][blogpage]
 
+## Code of Conduct
+
+Everyone interacting with this project's code, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/pboling/activerecord-transactionable/blob/master/CODE_OF_CONDUCT.md).
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -219,9 +223,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 See [CONTRIBUTING.md][contributing]
 
-## Code of Conduct
+## Contributors
 
-Everyone interacting with this project's code, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/pboling/activerecord-transactionable/blob/master/CODE_OF_CONDUCT.md).
+[![Contributors](https://contrib.rocks/image?repo=pboling/activerecord-transactionable)][contributors]
 
 ## Versioning
 
@@ -241,24 +245,11 @@ For example:
 spec.add_dependency "activerecord-transactionable", "~> 2.0"
 ```
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/pboling/activerecord-transactionable.
-
 ## License
 
 * Copyright (c) 2016 - 2018, 2021 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-
-[license]: LICENSE
-[semver]: http://semver.org/
-[pvc]: http://guides.rubygems.org/patterns/#pessimistic-version-constraint
-[railsbling]: http://www.railsbling.com
-[peterboling]: http://www.peterboling.com
-[documentation]: http://rdoc.info/github/pboling/activerecord-transactionable/frames
-[homepage]: https://github.com/pboling/activerecord-transactionable/
-[blogpage]: http://www.railsbling.com/tags/activerecord-transactionable/
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)][license-ref]
 
 [copyright-notice-explainer]: https://opensource.stackexchange.com/questions/5778/why-do-licenses-such-as-the-mit-license-specify-a-single-year
 
