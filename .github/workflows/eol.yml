@@ -1,4 +1,4 @@
-name: Unsupported Rubies
+name: Do Not Use These Rubies
 
 on:
   push:
