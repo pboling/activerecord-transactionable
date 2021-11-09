@@ -15,7 +15,7 @@ end
 # External libraries
 require "byebug" if debug
 require "rspec/block_is_expected"
-require "sqlite3" if eol # Not needed on newer versions of sqlite
+require 'rspec-benchmark'
 
 # This gem
 require "activerecord/transactionable"
@@ -24,6 +24,7 @@ require "activerecord/transactionable"
 require "config/active_record"
 require "config/factory_bot"
 require "rspec_config/matchers"
+require "rspec_config/factory_bot"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -34,11 +35,5 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
-  end
-
-  config.include FactoryBot::Syntax::Methods
-
-  config.before(:suite) do
-    FactoryBot.find_definitions
   end
 end
