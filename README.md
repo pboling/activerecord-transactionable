@@ -2,23 +2,15 @@
 
 Provides a method, `transaction_wrapper` at the class and instance levels that can be used instead of `ActiveRecord#transaction`.  Enables you to do transactions properly, with custom rescues and retry, including with or without locking.
 
-| Project                 | Activerecord::Transactionable    |
-|------------------------ | ----------------- |
-| gem name                |  activerecord-transactionable    |
-| license                 |  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) |
-| download rank               |  [![Total Downloads](https://img.shields.io/gem/rt/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) [![Daily Downloads](https://img.shields.io/gem/rd/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
-| version                 |  [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable) |
-| dependencies            |  [![Depfu](https://badges.depfu.com/badges/96a4d507f1a61a9368655f60fa3cb70f/count.svg)](https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653) |
-| continuous integration  |  [![Build](https://img.shields.io/travis/pboling/activerecord-transactionable.svg)](https://travis-ci.org/pboling/activerecord-transactionable) |
-| test coverage           |  [![Test Coverage](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage)](https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage) [![Coverage Status](https://coveralls.io/repos/github/pboling/activerecord-transactionable/badge.svg?branch=master)](https://coveralls.io/github/pboling/activerecord-transactionable?branch=master) |
-| code quality            |  [![Maintainability](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability)](https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability) |
-| code triage             |  [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)](https://www.codetriage.com/pboling/activerecord-transactionable) |
-| inline documenation     |  [![Inline docs](http://inch-ci.org/github/pboling/activerecord-transactionable.png)](http://inch-ci.org/github/pboling/activerecord-transactionable) |
-| homepage                |  [on Github.com][homepage], [on Railsbling.com][blogpage] |
-| documentation           |  [on RDoc.info][documentation] |
-| live chat               |  [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
-| expert support          |  [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github) |
-| Spread ~♡ⓛⓞⓥⓔ♡~      |  [🌏](https://about.me/peter.boling), [👼](https://angel.co/peter-boling), [:shipit:](http://coderwall.com/pboling), [![Tweet Peter](https://img.shields.io/twitter/follow/galtzo.svg?style=social&label=Follow)](http://twitter.com/galtzo), [🌹](https://nationalprogressiveparty.org) |
+| Project                    |  Activerecord::Transactionable |
+|--------------------------- |--------------------------- |
+| name, license, docs        |  [`activerecord-transactionable`][rubygems] [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)][license-ref] [![RubyDoc.info](https://img.shields.io/badge/documentation-rubydoc-brightgreen.svg?style=flat)][documentation] |
+| version & downloads        |  [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)][rubygems] [![Total Downloads](https://img.shields.io/gem/dt/activerecord-transactionable.svg)][rubygems] [![Downloads Today](https://img.shields.io/gem/rd/activerecord-transactionable.svg)][rubygems] [![Homepage](https://img.shields.io/badge/source-github-brightgreen.svg?style=flat)][source] |
+| dependencies & linting     |  [![Depfu](https://badges.depfu.com/badges/d570491bac0ad3b0b65deb3c82028327/count.svg)][depfu] [![lint status](https://github.com/pboling/activerecord-transactionable/actions/workflows/style.yml/badge.svg)][actions] |
+| unit tests                 |  [![supported rubies](https://github.com/pboling/activerecord-transactionable/actions/workflows/supported.yml/badge.svg)][actions] [![unsupported status](https://github.com/pboling/activerecord-transactionable/actions/workflows/unsupported.yml/badge.svg)][actions] |
+| coverage & maintainability |  [![Test Coverage](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage)][climate_coverage] [![codecov](https://codecov.io/gh/pboling/activerecord-transactionable/branch/master/graph/badge.svg?token=4ZNAWNxrf9)][codecov_coverage] [![Maintainability](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability)][climate_maintainability] [![Maintenance Policy](https://img.shields.io/badge/maintenance-policy-brightgreen.svg?style=flat)][maintenancee_policy] |
+| resources                  |  [![Discussion](https://img.shields.io/badge/discussions-github-brightgreen.svg?style=flat)][gh_discussions] [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github) [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)][chat] [![Blog](https://img.shields.io/badge/blog-railsbling-brightgreen.svg?style=flat)][blogpage] |
+| Spread ~♡ⓛⓞⓥⓔ♡~         |  [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)][code_triage] [![Liberapay Patrons](https://img.shields.io/liberapay/patrons/pboling.svg?logo=liberapay)][liberapay_donate] [![Sponsor Me](https://img.shields.io/badge/sponsor-pboling.svg?style=social&logo=github)][gh_sponsors] [🌏][aboutme] [👼][angelme] [💻][coderme] [🌹][politicme] [![Tweet @ Peter][followme-img]][tweetme] |
 
 Useful as an example of correct behavior for wrapping transactions.
 
@@ -65,6 +57,19 @@ And then execute:
 Or install it yourself as:
 
     $ gem install activerecord-transactionable
+
+## Compatibility
+
+Targeted ruby compatibility is non-EOL versions of Ruby, currently 2.6, 2.7, and
+3.0. Ruby is limited to 2.1+ in the gemspec, and when it changes there will be a major release.
+The `master` branch currently targets 2.0.x releases.
+
+| Ruby OAuth Version   | Maintenance Branch | Officially Supported Rubies                 | Unofficially Supported Rubies |
+|--------------------- | ------------------ | ------------------------------------------- | ----------------------------- |
+| 3.0.x                | N/A                | 2.7, 3.0, 3.1                               | 2.6                           |
+| 2.0.x                | `master`           | 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.0      |                               |
+
+NOTE: 2.0.5 is anticipated as last release of the 2.x series.
 
 ## Usage
 
@@ -197,6 +202,13 @@ Activerecord::Transactionable::ClassMethods.class_eval do
 end
 ```
 
+## More Information
+
+* RubyDoc Documentation: [![RubyDoc.info](https://img.shields.io/badge/documentation-rubydoc-brightgreen.svg?style=flat)][documentation]
+* GitHub Discussions: [![Discussion](https://img.shields.io/badge/discussions-github-brightgreen.svg?style=flat)][gh_discussions]
+* Live Chat on Gitter: [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)][chat]
+* Maintainer's Blog: [![Blog](https://img.shields.io/badge/blog-railsbling-brightgreen.svg?style=flat)][blogpage]
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -205,11 +217,11 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/pboling/activerecord-transactionable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+See [CONTRIBUTING.md][contributing]
 
 ## Code of Conduct
 
-Everyone interacting in the AnonymousActiveRecord project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/pboling/activerecord-transactionable/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting with this project's code, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/pboling/activerecord-transactionable/blob/master/CODE_OF_CONDUCT.md).
 
 ## Versioning
 
@@ -235,7 +247,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/pbolin
 
 ## License
 
-* Copyright (c) 2016 - 2018 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
+* Copyright (c) 2016 - 2018, 2021 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
@@ -247,3 +259,79 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/pbolin
 [documentation]: http://rdoc.info/github/pboling/activerecord-transactionable/frames
 [homepage]: https://github.com/pboling/activerecord-transactionable/
 [blogpage]: http://www.railsbling.com/tags/activerecord-transactionable/
+
+[copyright-notice-explainer]: https://opensource.stackexchange.com/questions/5778/why-do-licenses-such-as-the-mit-license-specify-a-single-year
+
+[license]: https://github.com/pboling/activerecord-transactionable/blob/master/LICENSE
+
+[semver]: http://semver.org/
+
+[pvc]: http://guides.rubygems.org/patterns/#pessimistic-version-constraint
+
+[railsbling]: http://www.railsbling.com
+
+[peterboling]: http://www.peterboling.com
+
+[issues]: https://github.com/pboling/activerecord-transactionable/issues
+
+[contributing]: https://github.com/pboling/activerecord-transactionable/blob/master/CONTRIBUTING.md
+
+[comment]: <> (Following links are used by README, CONTRIBUTING)
+
+[contributors]: https://github.com/pboling/activerecord-transactionable/graphs/contributors
+
+[comment]: <> (Following links are used by README, CONTRIBUTING, Homepage)
+
+[mailinglist]: http://groups.google.com/group/activerecord-transactionable-ruby
+
+[source]: https://github.com/pboling/activerecord-transactionable/
+
+[comment]: <> (Following links are used by Homepage)
+
+[network]: https://github.com/pboling/activerecord-transactionable/network
+
+[stargazers]: https://github.com/pboling/activerecord-transactionable/stargazers
+
+[comment]: <> (Following links are used by README, Homepage)
+
+[rubygems]: https://rubygems.org/gems/activerecord-transactionable
+
+[depfu]: https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653
+
+[actions]: https://github.com/pboling/activerecord-transactionable/actions
+
+[climate_coverage]: https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage
+
+[gh_discussions]: https://github.com/pboling/activerecord-transactionable/discussions
+
+[code_triage]: https://www.codetriage.com/pboling/activerecord-transactionable
+
+[license-ref]: https://opensource.org/licenses/MIT
+
+[codecov_coverage]: https://codecov.io/gh/pboling/activerecord-transactionable
+
+[liberapay_donate]: https://liberapay.com/pboling/donate
+
+[aboutme]: https://about.me/peter.boling
+
+[angelme]: https://angel.co/peter-boling
+
+[coderme]:http://coderwall.com/pboling
+
+[politicme]: https://nationalprogressiveparty.org
+
+[followme-img]: https://img.shields.io/twitter/follow/galtzo.svg?style=social&label=Follow
+
+[tweetme]: http://twitter.com/galtzo
+
+[documentation]: https://rubydoc.info/github/pboling/activerecord-transactionable
+
+[climate_maintainability]: https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability
+
+[chat]: https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
+[blogpage]: http://www.railsbling.com/tags/activerecord-transactionable/
+
+[maintenancee_policy]: https://guides.rubyonrails.org/maintenance_policy.html#security-issues
+
+[gh_sponsors]: https://github.com/sponsors/pboling
