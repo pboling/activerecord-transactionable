@@ -3,6 +3,7 @@
 %w[
   bundler/gem_tasks
   rake/testtask
+  rspec/core/rake_task
   fileutils
 ].each { |f| require f }
 
