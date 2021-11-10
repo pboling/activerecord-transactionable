@@ -8,7 +8,7 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | version & downloads        |  [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)][rubygems] [![Total Downloads](https://img.shields.io/gem/dt/activerecord-transactionable.svg)][rubygems] [![Downloads Today](https://img.shields.io/gem/rd/activerecord-transactionable.svg)][rubygems] [![Homepage](https://img.shields.io/badge/source-github-brightgreen.svg?style=flat)][source] |
 | dependencies & linting     |  [![Depfu](https://badges.depfu.com/badges/d570491bac0ad3b0b65deb3c82028327/count.svg)][depfu] [![lint status](https://github.com/pboling/activerecord-transactionable/actions/workflows/style.yml/badge.svg)][actions] |
 | unit tests                 |  [![supported rubies](https://github.com/pboling/activerecord-transactionable/actions/workflows/supported.yml/badge.svg)][actions] [![unsupported status](https://github.com/pboling/activerecord-transactionable/actions/workflows/unsupported.yml/badge.svg)][actions] |
-| coverage & maintainability |  [![Test Coverage](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage)][climate_coverage] [![codecov](https://codecov.io/gh/pboling/activerecord-transactionable/branch/master/graph/badge.svg?token=4ZNAWNxrf9)][codecov_coverage] [![Maintainability](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability)][climate_maintainability] [![Maintenance Policy](https://img.shields.io/badge/maintenance-policy-brightgreen.svg?style=flat)][maintenancee_policy] |
+| coverage & maintainability |  [![Test Coverage](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage)][climate_coverage] [![codecov](https://codecov.io/gh/pboling/activerecord-transactionable/branch/master/graph/badge.svg?token=4ZNAWNxrf9)][codecov_coverage] [![Maintainability](https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability)][climate_maintainability] [![Security Policy](https://img.shields.io/badge/security-policy-brightgreen.svg?style=flat)][security] |
 | resources                  |  [![Discussion](https://img.shields.io/badge/discussions-github-brightgreen.svg?style=flat)][gh_discussions] [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github) [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)][chat] [![Blog](https://img.shields.io/badge/blog-railsbling-brightgreen.svg?style=flat)][blogpage] |
 | Spread ~♡ⓛⓞⓥⓔ♡~         |  [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)][code_triage] [![Liberapay Patrons](https://img.shields.io/liberapay/patrons/pboling.svg?logo=liberapay)][liberapay_donate] [![Sponsor Me](https://img.shields.io/badge/sponsor-pboling.svg?style=social&logo=github)][gh_sponsors] [🌏][aboutme] [👼][angelme] [💻][coderme] [🌹][politicme] [![Tweet @ Peter][followme-img]][tweetme] |
 
@@ -227,6 +227,8 @@ See [CONTRIBUTING.md][contributing]
 
 [![Contributors](https://contrib.rocks/image?repo=pboling/activerecord-transactionable)][contributors]
 
+Made with [contributors-img](https://contrib.rocks).
+
 ## Versioning
 
 This library aims to adhere to [Semantic Versioning 2.0.0][semver].
@@ -244,16 +246,29 @@ For example:
 ```ruby
 spec.add_dependency "activerecord-transactionable", "~> 2.0"
 ```
+## Contact
+
+Author and maintainer is Peter Boling ([@pboling][gh_sponsors]).
+
+Comments are welcome in the [GitHub Discussions][gh_discussions] board.
+
+For security-related issues see [SECURITY][security].
 
 ## License
 
-* Copyright (c) 2016 - 2018, 2021 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
+The gem is available as open source under the terms of
+the [MIT License][license] [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)][license-ref].
+See [LICENSE][license] for the official [Copyright Notice][copyright-notice-explainer].
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)][license-ref]
+* Copyright (c) 2016 - 2018, 2021 [Peter H. Boling][peterboling] of [Rails Bling][railsbling]
 
 [copyright-notice-explainer]: https://opensource.stackexchange.com/questions/5778/why-do-licenses-such-as-the-mit-license-specify-a-single-year
 
 [license]: https://github.com/pboling/activerecord-transactionable/blob/master/LICENSE
+
+[conduct]: https://github.com/pboling/activerecord-transactionable/blob/master/CODE_OF_CONDUCT.md
+
+[security]: https://github.com/pboling/activerecord-transactionable/blob/master/SECURITY.md
 
 [semver]: http://semver.org/
 
