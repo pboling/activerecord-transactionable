@@ -8,6 +8,10 @@ end
 coverage = actual_version.call(2, 6)
 
 if coverage
+  require "simplecov-cobertura"
+  require "simplecov_json_formatter"
+  require "codecov"
+
   SimpleCov.start do
     add_filter "/spec/"
     add_filter "/lib/activerecord/transactionable/version.rb"

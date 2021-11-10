@@ -10,12 +10,7 @@ coverage = actual_version.call(2, 6)
 debug = minimum_version.call("2.4")
 stream = minimum_version.call("2.3")
 
-if coverage
-  require "simplecov"
-  require "simplecov-cobertura"
-  require "simplecov_json_formatter"
-  require "codecov"
-end
+require "simplecov" if coverage
 
 # External libraries
 require "byebug" if debug
