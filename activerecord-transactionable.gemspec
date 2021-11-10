@@ -23,8 +23,12 @@ Gem::Specification.new do |spec|
 
   ruby_version = Gem::Version.new(RUBY_VERSION)
   minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
+  actual_version = lambda do |major, minor|
+    actual = Gem::Version.new(ruby_version)
+    major == actual.segments[0] && minor == actual.segments[1] && RUBY_ENGINE == "ruby"
+  end
+  coverage = actual_version.call(2, 6)
   linting = minimum_version.call("2.6")
-  coverage = minimum_version.call("2.6")
   stream = minimum_version.call("2.3")
 
   spec.add_dependency "activemodel", ">= 4.0.0"
