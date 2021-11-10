@@ -49,6 +49,7 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency("rubocop-thread_safety", "~> 0.4")
   end
   if coverage
+    spec.add_development_dependency("codecov", "~> 0.6")
     spec.add_development_dependency("simplecov", "~> 0.21")
     spec.add_development_dependency("simplecov-cobertura", "~> 1.4")
   end

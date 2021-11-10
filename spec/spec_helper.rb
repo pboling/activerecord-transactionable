@@ -10,6 +10,7 @@ if coverage
   require "simplecov"
   require "simplecov-cobertura"
   require "simplecov_json_formatter"
+  require "codecov"
 end
 
 # External libraries
