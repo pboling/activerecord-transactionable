@@ -15,6 +15,7 @@ require "simplecov" if coverage
 # External libraries
 require "byebug" if debug
 require "rspec/block_is_expected"
+require "rspec/pending_for"
 require "rspec-benchmark"
 require "silent_stream" if stream
 

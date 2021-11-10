@@ -148,7 +148,9 @@ RSpec.describe Activerecord::Transactionable do
       end
 
       context "with bad argument" do
-        subject(:bad_argument) { TransactionableIceCream.new.do_something(args: 2, bad: :argument, really: "quite bad") }
+        subject(:bad_argument) do
+          TransactionableIceCream.new.do_something(args: 2, bad: :argument, really: "quite bad")
+        end
 
         it("raises ArgumentError") {
           block_is_expected.to raise_error(ArgumentError, /does not know how to handle arguments: \[:bad, :really\]/)
@@ -185,6 +187,7 @@ RSpec.describe Activerecord::Transactionable do
         end
 
         it "logs nothing when not nested in an open transaction" do
+          pending_for(engine: "truffleruby")
           output = capture(:stdout) do
             requires_new
           end
@@ -192,6 +195,7 @@ RSpec.describe Activerecord::Transactionable do
         end
 
         it "has debug logging" do
+          pending_for(engine: "truffleruby")
           output = capture(:stdout) do
             TransactionableIceCream.new.do_block(args: [1]) do
               requires_new
