@@ -52,6 +52,6 @@ jobs:
           name: codecov-upload
           fail_ci_if_error: true
       - name: CodeClimate Post-build Notification
-        run: cc-test-reporter after-build
+        run: cc-test-reporter after-build -t cobertura
         if: matrix.ruby == '2.6' && github.event_name != 'pull_request' && always()
         continue-on-error: ${{ matrix.allow_failures != 'false' }}
