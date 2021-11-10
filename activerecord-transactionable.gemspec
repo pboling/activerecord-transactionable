@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Getting transactions right is hard, and this gem makes it easier."
   spec.homepage      = "http://www.railsbling.com/tags/activerecord-transactionable"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = Dir["lib/**/*.rb", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md"]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
