@@ -63,6 +63,7 @@ module Activerecord
         lock = args.delete(:lock)
         inside_args = extract_args(args, INSIDE_TRANSACTION_ERROR_HANDLERS)
         outside_args = extract_args(args, OUTSIDE_TRANSACTION_ERROR_HANDLERS)
+        transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
         transaction_open = ActiveRecord::Base.connection.transaction_open?
         unless args.keys.empty?
           raise ArgumentError,
@@ -75,13 +76,12 @@ module Activerecord
                 "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
         end
 
-        transaction_args = extract_args(args, TRANSACTION_METHOD_ARG_NAMES)
         if transaction_open
           if transaction_args[REQUIRES_NEW]
             logger.debug("[#{self}.transaction_wrapper] Will start a nested transaction.")
           else
             transaction_args[REQUIRES_NEW] = true
-            logger.warn("[#{self}.transaction_wrapper] Opening a nested transaction. Setting require_new: true")
+            logger.warn("[#{self}.transaction_wrapper] Opening a nested transaction. Setting #{REQUIRES_NEW}: true")
           end
         end
         error_handler_outside_transaction(object: object, transaction_open: transaction_open,

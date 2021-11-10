@@ -49,6 +49,13 @@ RSpec.describe Activerecord::Transactionable do
     def self.logger
       @logger ||= NullLogger.new
     end
+
+    def self.log_with(alt_logger)
+      old_logger = @logger.dup
+      @logger = alt_logger
+      yield
+      @logger = old_logger
+    end
   end
 
   class TransactionableIceCream < PlainVanillaIceCream
@@ -126,10 +133,76 @@ RSpec.describe Activerecord::Transactionable do
         expect(tresult.success?).to eq(true)
       }
 
-      it("has diagnostic information") {
-        tresult = TransactionableIceCream.new.do_something(args: 2)
-        expect(tresult.to_h).to eq({ result: "success", attempt: 1, type: nil, context: "inside", nested: false })
-      }
+      context "with to_h" do
+        it("has diagnostic information") {
+          tresult = TransactionableIceCream.new.do_something(args: 2)
+          expect(tresult.to_h).to eq({ result: "success", attempt: 1, type: nil, context: "inside", nested: false })
+        }
+      end
+
+      context "with to_s" do
+        it("has diagnostic information") {
+          tresult = TransactionableIceCream.new.do_something(args: 2)
+          expect(tresult.to_s).to eq("{:result=>\"success\", :type=>nil, :context=>\"inside\", :nested=>false, :attempt=>1}")
+        }
+      end
+
+      context "with bad argument" do
+        subject(:bad_argument) { TransactionableIceCream.new.do_something(args: 2, bad: :argument, really: "quite bad") }
+
+        it("raises ArgumentError") {
+          block_is_expected.to raise_error(ArgumentError, /does not know how to handle arguments: \[:bad, :really\]/)
+        }
+      end
+
+      context "with bad rescue inside transaction" do
+        subject(:bad_rescue_inside) do
+          TransactionableIceCream.new.do_something(
+            args: 2,
+            rescued_errors: [
+              ActiveRecord::StatementInvalid,
+              ActiveRecord::RecordNotUnique
+            ]
+          )
+        end
+
+        it("raises ArgumentError") {
+          block_is_expected.to raise_error(ArgumentError,
+                                           /should not rescue \[ActiveRecord::RecordInvalid, ActiveRecord::StatementInvalid, ActiveRecord::RecordNotUnique\] inside a transaction: \[:rescued_errors, :prepared_errors, :retriable_errors, :reraisable_errors, :num_retry_attempts\]/)
+        }
+      end
+
+      context "with requires_new" do
+        subject(:requires_new) do
+          logger = Logger.new($stdout)
+          logger.level = Logger::DEBUG
+          TransactionableIceCream.log_with(logger) do
+            TransactionableIceCream.new.do_something(
+              args: 2,
+              requires_new: true
+            )
+          end
+        end
+
+        it "logs nothing when not nested in an open transaction" do
+          output = capture(:stdout) do
+            requires_new
+          end
+          expect(output).to eq ""
+        end
+
+        it "has debug logging" do
+          output = capture(:stdout) do
+            TransactionableIceCream.new.do_block(args: [1]) do
+              requires_new
+            end
+          end
+          logs = [
+            "Will start a nested transaction."
+          ]
+          expect(output).to include(*logs)
+        end
+      end
     end
   end
 

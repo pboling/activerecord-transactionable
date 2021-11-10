@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
   linting = minimum_version.call("2.6")
   coverage = minimum_version.call("2.6")
+  stream = minimum_version.call("2.3")
 
   spec.add_dependency "activemodel", ">= 4.0.0"
   spec.add_dependency "activerecord", ">= 4.0.0"
@@ -36,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-benchmark", "~> 0.6"
   spec.add_development_dependency "rspec-block_is_expected", "~> 1.0"
   spec.add_development_dependency "rspec-pending_for", "~> 0.1"
+  spec.add_development_dependency "silent_stream", "~> 1.0" if stream
   if linting
     spec.add_development_dependency("rubocop", "~> 1.22")
     spec.add_development_dependency("rubocop-md", "~> 1.0")
