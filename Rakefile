@@ -4,7 +4,6 @@
   bundler/gem_tasks
   rake/testtask
   rspec/core/rake_task
-  fileutils
 ].each { |f| require f }
 
 Bundler::GemHelper.install_tasks
@@ -18,7 +17,7 @@ begin
   RuboCop::RakeTask.new
 rescue LoadError
   task :rubocop do
-    warn "RuboCop is disabled on Ruby #{RUBY_VERSION}"
+    warn "RuboCop is disabled on #{RUBY_ENGINE} #{RUBY_VERSION}"
   end
 end
 
