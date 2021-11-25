@@ -55,7 +55,7 @@ Gem::Specification.new do |spec|
   if coverage
     spec.add_development_dependency("codecov", "~> 0.6")
     spec.add_development_dependency("simplecov", "~> 0.21")
-    spec.add_development_dependency("simplecov-cobertura", "~> 1.4")
+    spec.add_development_dependency("simplecov-cobertura", "~> 2.0")
   end
   spec.add_development_dependency "sqlite3", "~> 1"
   spec.add_development_dependency "yard", ">= 0.9.20"
