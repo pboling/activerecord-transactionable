@@ -3,6 +3,9 @@
 require "active_record"
 require "yaml"
 require "logger"
+require 'pathname'
+
+test_dir = Pathname.new File.dirname(__FILE__)
 
 class NullLogger < Logger
   def initialize(*args); end
@@ -10,16 +13,27 @@ class NullLogger < Logger
   def add(*args, &block); end
 end
 
-ActiveRecord::Base.logger = NullLogger.new
-ActiveRecord::Migration.verbose = false
+FileUtils.mkdir_p 'log'
+ActiveRecord::Base.logger = Logger.new("log/test.log")
+ActiveRecord::Base.logger.level = Logger::DEBUG
 
-configs = YAML.load_file("#{File.dirname(__FILE__)}/database.yml")
-if RUBY_PLATFORM == "java"
-  configs["sqlite"]["adapter"] = "jdbcsqlite3"
-  configs["mysql"]["adapter"] = "jdbcmysql"
-  configs["postgresql"]["adapter"] = "jdbcpostgresql"
+if ActiveRecord.respond_to?(:use_yaml_unsafe_load)
+  ActiveRecord.use_yaml_unsafe_load = true
+elsif ActiveRecord::Base.respond_to?(:use_yaml_unsafe_load)
+  ActiveRecord::Base.use_yaml_unsafe_load = true
 end
-ActiveRecord::Base.configurations = configs
+ActiveRecord::Migration.verbose = false
+ActiveRecord::Schema.verbose = false
+adapter = ENV["DB"] || "sqlite"
+yaml_config = YAML.load_file(test_dir.join("database.yml"))[adapter]
+
+# if RUBY_PLATFORM == "java"
+#   yaml_config["sqlite"]["adapter"] = "jdbcsqlite3"
+#   yaml_config["mysql"]["adapter"] = "jdbcmysql"
+#   yaml_config["postgresql"]["adapter"] = "jdbcpostgresql"
+# end
+config = ActiveRecord::DatabaseConfigurations::HashConfig.new("test", adapter, yaml_config)
+ActiveRecord::Base.configurations.configurations << config
 
 # Run specific adapter tests like:
 #
@@ -27,6 +41,5 @@ ActiveRecord::Base.configurations = configs
 #   DB=mysql rake test:all
 #   DB=postgresql rake test:all
 #
-db_name = (ENV["DB"] || "sqlite").to_sym
-ActiveRecord::Base.establish_connection(db_name)
+ActiveRecord::Base.establish_connection :test
 load("#{File.dirname(__FILE__)}/schema.rb")

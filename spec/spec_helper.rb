@@ -1,33 +1,33 @@
 # frozen_string_literal: true
 
-ruby_version = Gem::Version.new(RUBY_VERSION)
-minimum_version = ->(version) { ruby_version >= Gem::Version.new(version) && RUBY_ENGINE == "ruby" }
-actual_version = lambda do |major, minor|
-  actual = Gem::Version.new(ruby_version)
-  major == actual.segments[0] && minor == actual.segments[1] && RUBY_ENGINE == "ruby"
-end
-coverage = actual_version.call(2, 6)
-debug = minimum_version.call("2.4")
-stream = minimum_version.call("2.3")
-
-require "simplecov" if coverage
+ENV["RAILS_ENV"] = "test"
+# This does not require "simplecov",
+#   because that has a side-effect of running `.simplecov`
+require "kettle-soup-cover"
 
 # External libraries
-require "byebug" if debug
 require "rspec/block_is_expected"
 require "rspec/pending_for"
 require "rspec-benchmark"
-require "silent_stream" if stream
+require "silent_stream"
+
+# 3rd Party Lib Configs
+require "config/byebug"
+require "config/active_record"
+require "config/factory_bot"
+
+# RSpec Configs
+require "config/rspec/matchers"
+require "config/rspec/factory_bot"
+require "config/rspec/rspec_block_is_expected"
+require "config/rspec/rspec_core"
+require "config/rspec/silent_stream"
+
+# Last thing before this gem is code coverage:
+require "simplecov" if Kettle::Soup::Cover::DO_COV
 
 # This gem
 require "activerecord/transactionable"
-
-# Configs
-require "config/active_record"
-require "config/factory_bot"
-require "rspec_config/matchers"
-require "rspec_config/factory_bot"
-require "rspec_config/silent_stream" if stream
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
