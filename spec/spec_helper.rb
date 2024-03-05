@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 ENV["RAILS_ENV"] = "test"
-# This does not require "simplecov",
-#   because that has a side-effect of running `.simplecov`
-require "kettle-soup-cover"
+begin
+  # This does not require "simplecov",
+  #   because that has a side-effect of running `.simplecov`
+  require "kettle-soup-cover"
+rescue LoadError
+  puts "Not running code coverage"
+end
 
 # External libraries
 require "rspec/block_is_expected"
