@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "active_model"
 require "active_record"
 
 ActiveRecord::Schema.define(version: 0) do
