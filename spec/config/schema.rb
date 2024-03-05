@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'active_model'
-require 'active_record'
+require "active_model"
+require "active_record"
 
 ActiveRecord::Schema[7.1].define(version: 0) do
   create_table :authors do |t|

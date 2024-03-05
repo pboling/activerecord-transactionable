@@ -1,4 +1,4 @@
-name: Unsupported Rubies
+name: Ruby Current Matrix
 
 env:
   K_SOUP_COV_DO: false
@@ -32,9 +32,8 @@ jobs:
     if: "!contains(github.event.commits[0].message, '[ci skip]') && !contains(github.event.commits[0].message, '[skip ci]')"
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
         rubygems:
           - latest
@@ -43,7 +42,9 @@ jobs:
         gemfile:
           - vanilla
         ruby:
-          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
 
     steps:
       - name: Checkout

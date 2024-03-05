@@ -3,17 +3,19 @@
 require "active_record"
 require "yaml"
 require "logger"
-require 'pathname'
+require "pathname"
 
 test_dir = Pathname.new File.dirname(__FILE__)
 
 class NullLogger < Logger
-  def initialize(*args); end
+  def initialize(*args)
+  end
 
-  def add(*args, &block); end
+  def add(*args, &block)
+  end
 end
 
-FileUtils.mkdir_p 'log'
+FileUtils.mkdir_p "log"
 ActiveRecord::Base.logger = Logger.new("log/test.log")
 ActiveRecord::Base.logger.level = Logger::DEBUG
 

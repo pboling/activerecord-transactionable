@@ -29,7 +29,7 @@ module Activerecord
           type: type,
           context: context,
           nested: nested,
-          attempt: attempt
+          attempt: attempt,
         }
         if !skip_error && error
           diagnostic_data[:error] = error.class.to_s
