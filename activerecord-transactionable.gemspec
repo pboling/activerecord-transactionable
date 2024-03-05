@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   # Linting
   spec.add_development_dependency("rubocop-lts", "~> 14.1", ">= 14.1.1")
   spec.add_development_dependency("rubocop-packaging", "~> 0.5", ">= 0.5.2")
-  spec.add_development_dependency("rubocop-rspec", "~> 2.25")
+  spec.add_development_dependency("rubocop-rspec", "~> 2.10")
 
   # Testing
   spec.add_development_dependency("factory_bot", ">= 4.0")
