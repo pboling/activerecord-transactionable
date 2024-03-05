@@ -3,7 +3,7 @@
 require "active_model"
 require "active_record"
 
-ActiveRecord::Schema[6.1].define(version: 0) do
+ActiveRecord::Schema.define(version: 0) do
   create_table :authors do |t|
     t.string :name, null: false
   end
