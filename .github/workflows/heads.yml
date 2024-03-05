@@ -44,7 +44,6 @@ jobs:
           - vanilla
         ruby:
           - head
-          - jruby-head
           - truffleruby-head
 
     steps:
