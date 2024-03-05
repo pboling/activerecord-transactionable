@@ -39,7 +39,7 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | version         | [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable)                                                                                                                                                                                               |
 | code triage     | [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)](https://www.codetriage.com/pboling/activerecord-transactionable)                                                                                                                                                       |
 | documentation   | [on RDoc.info][documentation]                                                                                                                                                                                                                                                                                                     |
-| live chat       | [![Join the chat at https://gitter.im/pboling/activerecord-transactionable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pboling/activerecord-transactionable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)                                                                          |
+| live chat       | [![Join the chat at https://matrix.to/#/#pboling_activerecord-transactionable:gitter.im](https://badges.gitter.im/Join%20Chat.svg)](https://matrix.to/#/#pboling_activerecord-transactionable:gitter.im?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)                                                                          |
 | expert support  | [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github)                                                                                                                             |
 | Spread ~♡ⓛⓞⓥⓔ♡~ | [🌏](https://about.me/peter.boling), [👼](https://angel.co/peter-boling), [![Liberapay Patrons][⛳liberapay-img]][⛳liberapay] [![Follow Me on LinkedIn][🖇linkedin-img]][🖇linkedin] [![Find Me on WellFound:][✌️wellfound-img]][✌️wellfound] [![My Blog][🚎blog-img]][🚎blog] [![Follow Me on Twitter][🐦twitter-img]][🐦twitter] |
 
@@ -369,9 +369,9 @@ See [LICENSE.txt][📄license] for the official [Copyright Notice][📄copyright
 [comment]: <> ( 🔑 KEYED LINKS )
 
 [🔑cc-mnt]: https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability
-[🔑cc-mnti]: https://api.codeclimate.com/v1/badges/<key>/maintainability
+[🔑cc-mnti]: https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability
 [🔑cc-cov]: https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage
-[🔑cc-covi]: "https://api.codeclimate.com/v1/badges/<key>/test_coverage"
+[🔑cc-covi]: "https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage"
 [🔑depfu]: "https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653"
 [🔑depfui]: "https://badges.depfu.com/badges/d570491bac0ad3b0b65deb3c82028327/count.svg"
 
