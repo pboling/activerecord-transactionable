@@ -28,7 +28,7 @@ require "config/rspec/rspec_core"
 require "config/rspec/silent_stream"
 
 # Last thing before this gem is code coverage:
-require "simplecov" if Kettle::Soup::Cover::DO_COV
+require "simplecov" if defined?(Kettle) && Kettle::Soup::Cover::DO_COV
 
 # This gem
 require "activerecord/transactionable"
