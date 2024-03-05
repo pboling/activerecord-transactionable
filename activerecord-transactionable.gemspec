@@ -26,7 +26,8 @@ Gem::Specification.new do |spec|
 
   # Code Coverage
   # CodeCov + GitHub setup is not via gems: https://github.com/marketplace/actions/codecov
-  spec.add_development_dependency("kettle-soup-cover", "~> 1.0", ">= 1.0.2")
+  # Minimum Ruby for kettle-soup-cover is 2.7, so we can only add the dependency in gemfiles/*
+  # spec.add_development_dependency("kettle-soup-cover", "~> 1.0", ">= 1.0.2")
 
   # Documentation
   spec.add_development_dependency("kramdown", "~> 2.4")
