@@ -35,9 +35,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("yard-junk", "~> 0.0")
 
   # Linting
-  spec.add_development_dependency("rubocop-lts", "~> 14.1", ">= 14.1.1")
-  spec.add_development_dependency("rubocop-packaging", "~> 0.5", ">= 0.5.2")
-  spec.add_development_dependency("rubocop-rspec", "~> 2.10")
+  # Minimum Ruby for various linting gems is too high, so we can only add the dependency in gemfiles/*
+  # spec.add_development_dependency("rubocop-lts", "~> 14.1", ">= 14.1.1")
+  # spec.add_development_dependency("rubocop-packaging", "~> 0.5", ">= 0.5.2")
+  # spec.add_development_dependency("rubocop-rspec", "~> 2.10")
 
   # Testing
   spec.add_development_dependency("factory_bot", ">= 4.0")
