@@ -2,13 +2,15 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 3.0.x   | :white_check_mark: |
-| 2.0.x   | :white_check_mark: |
-| 1.0.x   | :x:                |
-| 0.0.x   | :x:                |
+| Version | Supported |
+|---------|-----------|
+| 3.0.x   | ✅         |
+| 2.0.x   | ❌         |
+| 1.0.x   | ❌         |
+| 0.0.x   | ❌         |
 
 ## Reporting a Vulnerability
 
-Peter Boling is the primary maintainer of this gem.  Please find a way to [contact him directly](https://railsbling.com/contact) to report the issue.  Include as much relevant information as possible.
+Peter Boling is the primary maintainer of this gem. Please find a way
+to [contact him directly](https://railsbling.com/contact) to report the issue. Include as much relevant information as
+possible.
