@@ -189,7 +189,6 @@ RSpec.describe Activerecord::Transactionable do
         end
 
         it "logs nothing when not nested in an open transaction" do
-          pending_for(engine: "truffleruby")
           output = capture(:stdout) do
             requires_new
           end
@@ -197,7 +196,6 @@ RSpec.describe Activerecord::Transactionable do
         end
 
         it "has debug logging" do
-          pending_for(engine: "truffleruby")
           output = capture(:stdout) do
             TransactionableIceCream.new.do_block(args: [1]) do
               requires_new
