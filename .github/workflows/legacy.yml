@@ -1,4 +1,4 @@
-name: Ruby Current Matrix
+name: Ruby Legacy Matrix
 
 env:
   K_SOUP_COV_DO: false

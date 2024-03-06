@@ -2,7 +2,7 @@
 # Not sure what exactly, and reported here:
 # https://github.com/skryukov/rubocop-gradual/issues/12
 # As a result this workflow must allow failure.
-name: Code Style
+name: Ruby - Style
 
 on:
   push:
