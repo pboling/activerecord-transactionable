@@ -73,7 +73,8 @@ Gem::Specification.new do |spec|
   # spec.add_development_dependency("rubocop-rspec", "~> 2.10")
 
   # Testing
-  spec.add_development_dependency("factory_bot", ">= 4.0")
+  # Locked
+  spec.add_development_dependency("factory_bot", "6.4.4")
   spec.add_development_dependency("rspec", ">= 3")
   spec.add_development_dependency("rspec-benchmark", "~> 0.6")
   spec.add_development_dependency("rspec-block_is_expected", "~> 1.0", ">= 1.0.5")
