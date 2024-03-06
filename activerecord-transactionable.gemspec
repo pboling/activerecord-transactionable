@@ -73,7 +73,8 @@ Gem::Specification.new do |spec|
   # spec.add_development_dependency("rubocop-rspec", "~> 2.10")
 
   # Testing
-  # Locked
+  # TODO: factory_bot is locked... Drop lock when minimum Ruby <= 3.0
+  #       See: https://github.com/thoughtbot/factory_bot/issues/1627
   spec.add_development_dependency("factory_bot", "6.4.4")
   spec.add_development_dependency("rspec", ">= 3")
   spec.add_development_dependency("rspec-benchmark", "~> 0.6")
