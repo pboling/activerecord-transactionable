@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
+# External gems
+require "version_gem"
 require "active_model"
 require "active_record"
-# apparently needed for Rails 4.0 compatibility with rspec, when
-#   this gem is loaded before the rails gem by bundler, as will happen when you
-#   keep your Gemfile sorted alphabetically.
 require "active_record/validations"
 
+# This gem
 require "activerecord/transactionable/version"
 require "activerecord/transactionable/result"
 
@@ -54,10 +54,6 @@ module Activerecord
     INSIDE_CONTEXT = "inside"
     OUTSIDE_CONTEXT = "outside"
 
-    def transaction_wrapper(**args, &block)
-      self.class.transaction_wrapper(object: self, **args, &block)
-    end
-
     module ClassMethods
       def transaction_wrapper(object: nil, **args)
         lock = args.delete(:lock)
@@ -70,8 +66,8 @@ module Activerecord
             "#{self} does not know how to handle arguments: #{args.keys.inspect}"
         end
         if ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.detect do |error|
-             inside_args.values.flatten.uniq.include?(error)
-           end
+          inside_args.values.flatten.uniq.include?(error)
+        end
           raise ArgumentError,
             "#{self} should not rescue #{ERRORS_TO_DISALLOW_INSIDE_TRANSACTION.inspect} inside a transaction: #{inside_args.keys.inspect}"
         end
@@ -87,7 +83,7 @@ module Activerecord
         error_handler_outside_transaction(
           object: object,
           transaction_open: transaction_open,
-                                          **outside_args,
+          **outside_args,
         ) do |outside_is_retry|
           run_inside_transaction_block(
             transaction_args: transaction_args,
@@ -287,5 +283,13 @@ module Activerecord
         end
       end
     end
+
+    def transaction_wrapper(**args, &block)
+      self.class.transaction_wrapper(object: self, **args, &block)
+    end
   end
+end
+
+Activerecord::Transactionable::Version.class_eval do
+  extend VersionGem::Basic
 end
