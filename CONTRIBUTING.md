@@ -1,6 +1,6 @@
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at [https://github.com/pboling/debug_logging][🚎src-main]
+Bug reports and pull requests are welcome on GitHub at [https://github.com/pboling/activerecord-transactionable][🚎src-main]
 . This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to
 the [code of conduct][🤝conduct].
 
@@ -33,15 +33,15 @@ See: [RubyGems Security Guide][🔒️rubygems-security-guide]
 
 ## Contributors
 
-[![Contributors](https://contrib.rocks/image?repo=pboling/debug_logging)][🖐contributors]
+[![Contributors](https://contrib.rocks/image?repo=pboling/activerecord-transactionable)][🖐contributors]
 
 Made with [contributors-img][🖐contrib-rocks].
 
-[🧪build]: https://github.com/pboling/debug_logging/actions
+[🧪build]: https://github.com/pboling/activerecord-transactionable/actions
 [🏘chat]: https://matrix.to/#/#pboling_activerecord-transactionable:gitter.im
-[🤝conduct]: https://github.com/pboling/debug_logging/blob/main/CODE_OF_CONDUCT.md
+[🤝conduct]: https://github.com/pboling/activerecord-transactionable/blob/main/CODE_OF_CONDUCT.md
 [🖐contrib-rocks]: https://contrib.rocks
-[🖐contributors]: https://github.com/pboling/debug_logging/graphs/contributors
+[🖐contributors]: https://github.com/pboling/activerecord-transactionable/graphs/contributors
 [💎rubygems]: https://rubygems.org
 [🔒️rubygems-security-guide]: https://guides.rubygems.org/security/#building-gems
-[🚎src-main]: https://github.com/pboling/debug_logging
+[🚎src-main]: https://github.com/pboling/activerecord-transactionable
