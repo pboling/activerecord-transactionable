@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord-transactionable (3.0.2)
+    activerecord-transactionable (3.0.3)
       activemodel (>= 5.2.8.1)
       activerecord (>= 5.2.8.1)
       version_gem (~> 1.1, >= 1.1.3)
