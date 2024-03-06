@@ -7,6 +7,18 @@
 [![Maintainability][🔑cc-mnti]][🔑cc-mnt]
 [![Depfu][🔑depfui]][🔑depfu]
 
+[🚎dl-cwf]: https://github.com/pboling/activerecord-transactionable/actions/workflows/current.yml
+[🚎dl-cwfi]: https://github.com/pboling/activerecord-transactionable/actions/workflows/current.yml/badge.svg
+
+[comment]: <> ( 🔑 KEYED LINKS )
+
+[🔑cc-mnt]: https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability
+[🔑cc-mnti]: https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability
+[🔑cc-cov]: https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage
+[🔑cc-covi]: https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage
+[🔑depfu]: https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653
+[🔑depfui]: https://badges.depfu.com/badges/d570491bac0ad3b0b65deb3c82028327/count.svg
+
 -----
 
 [![Liberapay Patrons][⛳liberapay-img]][⛳liberapay]
@@ -19,9 +31,6 @@
 </span>
 
 </div>
-
-[🚎dl-cwf]: https://github.com/pboling/activerecord-transactionable/actions/workflows/current.yml
-[🚎dl-cwfi]: https://github.com/pboling/activerecord-transactionable/actions/workflows/current.yml/badge.svg
 
 [⛳liberapay-img]: https://img.shields.io/liberapay/patrons/pboling.svg?logo=liberapay
 [⛳liberapay]: https://liberapay.com/pboling/donate
@@ -365,15 +374,6 @@ See [LICENSE.txt][📄license] for the official [Copyright Notice][📄copyright
 ### © Copyright
 
 * Copyright (c) 2016-2018, 2021-2022, 2024 [Peter H. Boling][💁🏼‍♂️peterboling] of [Rails Bling][💁🏼‍♂️railsbling]
-
-[comment]: <> ( 🔑 KEYED LINKS )
-
-[🔑cc-mnt]: https://codeclimate.com/github/pboling/activerecord-transactionable/maintainability
-[🔑cc-mnti]: https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/maintainability
-[🔑cc-cov]: https://codeclimate.com/github/pboling/activerecord-transactionable/test_coverage
-[🔑cc-covi]: "https://api.codeclimate.com/v1/badges/41fa99881cfe6d45e7e5/test_coverage"
-[🔑depfu]: "https://depfu.com/github/pboling/activerecord-transactionable?project_id=2653"
-[🔑depfui]: "https://badges.depfu.com/badges/d570491bac0ad3b0b65deb3c82028327/count.svg"
 
 [comment]: <> ( 💁🏼‍♂️ PERSONAL LINKS )
 
