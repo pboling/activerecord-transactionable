@@ -117,11 +117,11 @@ Or install it yourself as:
 
 Targeted ruby compatibility is non-EOL versions of Ruby, currently 2.6, 2.7, 3.0, 3.1, 3.2, 3.3.
 Ruby is limited to 2.5+ in the gemspec, and when it changes there will be a major release.
-The `master` branch currently targets 3.0.x releases.
+The `main` branch currently targets 3.0.x releases.
 
 | Ruby OAuth Version | Maintenance Branch | Officially Supported Rubies            | Unofficially Supported Rubies |
 |--------------------|--------------------|----------------------------------------|-------------------------------|
-| 3.0.x              | `master`           | 2.6, 2.7, 3.0, 3.1, 3.2, 3.3           | 2.5                           |
+| 3.0.x              | `main`           | 2.6, 2.7, 3.0, 3.1, 3.2, 3.3           | 2.5                           |
 | 2.0.x              | `v2-maintenance`   | 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.0 |                               |
 
 NOTE: 2.0.5 is anticipated as last release of the 2.x series.
@@ -354,7 +354,7 @@ Feedback and questions are welcome on the [GitHub Discussions][gh_discussions] b
 
 For security-related issues see [SECURITY][security].
 
-[security]: https://github.com/pboling/activerecord-transactionable/blob/master/SECURITY.md
+[security]: https://github.com/pboling/activerecord-transactionable/blob/main/SECURITY.md
 [gh_discussions]: https://github.com/pboling/activerecord-transactionable/discussions
 [gh_sponsors]: https://github.com/sponsors/pboling
 
