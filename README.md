@@ -47,19 +47,19 @@ Provides a method, `transaction_wrapper` at the class and instance levels that c
 | download rank   | [![Downloads Today](https://img.shields.io/gem/rd/activerecord-transactionable.svg)](https://github.com/pboling/activerecord-transactionable)                                                                                                                                                                                     |
 | version         | [![Version](https://img.shields.io/gem/v/activerecord-transactionable.svg)](https://rubygems.org/gems/activerecord-transactionable)                                                                                                                                                                                               |
 | code triage     | [![Open Source Helpers](https://www.codetriage.com/pboling/activerecord-transactionable/badges/users.svg)](https://www.codetriage.com/pboling/activerecord-transactionable)                                                                                                                                                       |
-| documentation   | [on RDoc.info][documentation]                                                                                                                                                                                                                                                                                                     |
+| documentation   | [on RubyDoc.info][documentation]                                                                                                                                                                                                                                                                                                     |
 | live chat       | [![Join the chat at https://matrix.to/#/#pboling_activerecord-transactionable:gitter.im](https://badges.gitter.im/Join%20Chat.svg)](https://matrix.to/#/#pboling_activerecord-transactionable:gitter.im?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)                                                                          |
 | expert support  | [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/peterboling?utm_source=github&utm_medium=button&utm_term=peterboling&utm_campaign=github)                                                                                                                             |
 | Spread ~♡ⓛⓞⓥⓔ♡~ | [🌏](https://about.me/peter.boling), [👼](https://angel.co/peter-boling), [![Liberapay Patrons][⛳liberapay-img]][⛳liberapay] [![Follow Me on LinkedIn][🖇linkedin-img]][🖇linkedin] [![Find Me on WellFound:][✌️wellfound-img]][✌️wellfound] [![My Blog][🚎blog-img]][🚎blog] [![Follow Me on Twitter][🐦twitter-img]][🐦twitter] |
 
-[documentation]: https://rubydoc.info/github/pboling/activerecord-transactionable
+[documentation]: https://rubydoc.info/gems/activerecord-transactionable
 [🖇linkedin]: http://www.linkedin.com/in/peterboling
 [🖇linkedin-img]: https://img.shields.io/badge/PeterBoling-blue?style=plastic&logo=linkedin
 [✌️wellfound]: https://angel.co/u/peter-boling
 [✌️wellfound-img]: https://img.shields.io/badge/peter--boling-orange?style=plastic&logo=angellist
 [🐦twitter]: http://twitter.com/intent/user?screen_name=galtzo
 [🐦twitter-img]: https://img.shields.io/twitter/follow/galtzo.svg?style=social&label=Follow%20@galtzo
-[🚎blog]: http://www.railsbling.com/tags/oauth2/
+[🚎blog]: http://www.railsbling.com/tags/activerecord-transactionable/
 [🚎blog-img]: https://img.shields.io/badge/blog-railsbling-brightgreen.svg?style=flat
 [my🧪lab]: https://gitlab.com/pboling
 [my🧊berg]: https://codeberg.org/pboling
@@ -119,7 +119,7 @@ Targeted ruby compatibility is non-EOL versions of Ruby, currently 2.6, 2.7, 3.0
 Ruby is limited to 2.5+ in the gemspec, and when it changes there will be a major release.
 The `main` branch currently targets 3.0.x releases.
 
-| Ruby OAuth Version | Maintenance Branch | Officially Supported Rubies            | Unofficially Supported Rubies |
+| Gem Version | Maintenance Branch | Officially Supported Rubies            | Unofficially Supported Rubies |
 |--------------------|--------------------|----------------------------------------|-------------------------------|
 | 3.0.x              | `main`           | 2.6, 2.7, 3.0, 3.1, 3.2, 3.3           | 2.5                           |
 | 2.0.x              | `v2-maintenance`   | 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.0 |                               |
